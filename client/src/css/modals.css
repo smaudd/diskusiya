@@ -1,0 +1,98 @@
+.modal {
+    z-index: 1000;
+    opacity: 0;
+    word-break: break-word;
+    width: 620px;
+    max-width: 100%;
+    height: 100%;
+    color: var(--text-color);
+    backface-visibility: hidden;
+    transition-property: opacity, transform, width, display;
+    transition-duration: 0.5s;
+    transition-behavior: allow-discrete;
+    flex-direction: column;
+    padding: var(--xl);
+    display: none;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    transform: translate(30px);
+    background: var(--surface-color);
+    overscroll-behavior: none;
+    border-width: 0px;
+    border-style: none;
+    border-color: currentcolor;
+    border-image: none;
+    outline: 0px;
+    margin: 0px;
+    gap: var(--md);
+    .modal-content {
+        scrollbar-width: thin;
+        flex-grow: 1;
+        position: relative;
+        overflow: auto;
+    }
+    .modal-header {
+        font-weight: bold;
+    }
+    .modal-header,
+    .modal-footer {
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--md);
+        width: 100%;
+        padding-top: calc(var(--md) - 10px);
+        padding-bottom: calc(var(--md) - 10px);
+        display: flex;
+    }
+}
+
+.modal-content:before,
+.modal-content:after {
+    content: "";
+    z-index: 9;
+    width: auto;
+    height: 1px;
+    margin-left: calc(-1 * var(--md));
+    margin-right: calc(-1 * var(--md));
+    pointer-events: none;
+    opacity: 0;
+    display: block;
+    position: sticky;
+    left: 0;
+}
+
+.modal[data-modal-state="open"] {
+    opacity: 1;
+    display: flex;
+    transform: translate(0px);
+    @starting-style {
+        opacity: 0;
+        transform: translate(30px);
+    }
+}
+
+.modal:before {
+    content: "";
+    z-index: -2;
+    background: var(--overlay-color);
+    width: 200vw;
+    height: 200vh;
+    display: block;
+    position: fixed;
+    top: -100vh;
+    left: -100vw;
+}
+
+.modal:after {
+    content: "";
+    z-index: -1;
+    border-radius: inherit;
+    background: inherit;
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
