@@ -25,7 +25,7 @@ export default function register() {
             const message = err.message;
             app.toasts.error(app.$(message));
         }
-    };
+    }
 
     const form = t.form(
         { onsubmit: onSubmit },
