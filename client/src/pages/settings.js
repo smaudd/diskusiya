@@ -1,5 +1,5 @@
 import { t } from "shablon";
-import { initI18n } from "../i18n"
+import { initI18n } from "../i18n";
 import layout from "../components/layout";
 
 export default function settings() {
@@ -10,14 +10,14 @@ export default function settings() {
             await app.pb.collection("users").update(app.pb.authStore.record.id, {
                 language,
             });
-            initI18n()
+            initI18n();
             app.toasts.info(app.$("Settings successfully updated!"));
-            app.replaceChildren(settings())
+            app.replaceChildren(settings());
         } catch (err) {
             const message = err.message;
             app.toasts.error(app.$(message));
         }
-    };
+    }
 
     const languageOptions = [
         {
