@@ -1,0 +1,41 @@
+.toasts-container {
+    z-index: 9999;
+    top: 0;
+    width: 100%;
+    display: block;
+    position: fixed;
+    left: 0;
+    pointer-events: none !important;
+    .toast {
+        top: 0;
+        position: sticky;
+        transition: opacity 0.5s;
+        animation: appear 0.5s;
+        margin: 0 auto;
+        padding: var(--md);
+    }
+
+    .toast.info {
+        background: var(--info-color);
+        color: white;
+    }
+
+    .toast.error {
+        background: var(--error-color);
+        color: white;
+    }
+    .toast {
+        pointer-events: auto;
+    }
+    .toast.removing {
+        opacity: 0;
+    }
+    .toast-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .toast-remove {
+        cursor: pointer;
+    }
+}
