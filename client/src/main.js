@@ -3,6 +3,7 @@ import "./pb";
 import "./i18n";
 import "./css/main.css";
 import "./components/toast";
+import "./components/modal";
 import login from "./pages/login";
 import home from "./pages/home";
 import register from "./pages/register";
