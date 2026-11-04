@@ -5,7 +5,14 @@ const labels = {
 };
 
 function i18n(lang) {
-    return (key) => {
+    return (key, replacement) => {
+        // TODO: Improve readability
+        if (replacement) {
+            return labels[lang]
+                ? labels[lang][key]?.replace("%%", replacement) ||
+                      key.replace("%%", replacement)
+                : key.replace("%%", replacement);
+        }
         return labels[lang] ? labels[lang][key] || key : key;
     };
 }
