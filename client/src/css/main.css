@@ -1,0 +1,36 @@
+@import "./variables.css";
+@import "./animations.css";
+@import "./toasts.css";
+
+* {
+    box-sizing: border-box;
+    font-family: var(--font);
+}
+
+body {
+    margin: 0;
+    padding: var(--xl);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+nav {
+    display: flex;
+    gap: var(--xl);
+}
+
+::view-transition-group(root) {
+    animation-duration: 100ms;
+}

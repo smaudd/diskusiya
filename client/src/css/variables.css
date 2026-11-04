@@ -1,0 +1,19 @@
+:root {
+    --sm: 0.25rem;
+    --base: 0.5rem;
+    --md: 0.75rem;
+    --lg: 1rem;
+    --xl: 1.25rem;
+
+    --font: Verdana;
+
+    --primary-color: red;
+    --secondary-color: blue;
+    --surface-color: #e6e9ef;
+
+    --sucess-color: green;
+    --info-color: blue;
+    --error-color: red;
+
+    --b1: 1px solid var(--primary-color);
+}
