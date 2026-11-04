@@ -1,0 +1,13 @@
+.btn {
+    appearance: none;
+    background-color: var(--primary-color);
+    border: 0;
+    padding: var(--md);
+    cursor: pointer;
+    font-weight: bold;
+    border: var(--border-1);
+}
+
+.btn.borderless {
+    border: none;
+}

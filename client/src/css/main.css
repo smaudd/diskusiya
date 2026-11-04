@@ -1,6 +1,11 @@
 @import "./variables.css";
 @import "./animations.css";
 @import "./toasts.css";
+@import "./modals.css";
+@import "./utilities.css";
+@import "./forms.css";
+@import "./buttons.css";
+@import "./feed.css";
 
 * {
     box-sizing: border-box;
@@ -33,4 +38,9 @@ nav {
 
 ::view-transition-group(root) {
     animation-duration: 100ms;
+}
+
+.page {
+    display: grid;
+    gap: var(--xl);
 }

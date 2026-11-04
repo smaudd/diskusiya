@@ -7,13 +7,17 @@
 
     --font: Verdana;
 
-    --primary-color: red;
-    --secondary-color: blue;
+    /* TODO: Improve tokens and decide in some actual variables */
+
     --surface-color: #e6e9ef;
+    --primary-color: color-mix(in srgb, var(--surface-color), white 14%);
+    --secondary-color: color-mix(in srgb, var(--surface-color), black 14%);
 
     --sucess-color: green;
     --info-color: blue;
     --error-color: red;
 
-    --b1: 1px solid var(--primary-color);
+    --overlay-color: rgba(0, 0, 0, 0.5);
+
+    --border-1: 1px solid var(--secondary-color);
 }

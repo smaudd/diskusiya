@@ -1,0 +1,33 @@
+.field {
+    display: flex;
+    flex-direction: column;
+    border: var(--border-1);
+
+    label {
+        font-weight: bold;
+        padding: var(--md);
+        font-size: var(--md);
+        border-bottom: var(--border-1);
+        background-color: var(--surface-color);
+        display: flex;
+        align-items: center;
+    }
+
+    input,
+    textarea,
+    select {
+        appearance: none;
+        border: none;
+        background-color: var(--surface-color);
+        outline: none;
+        font-size: var(--lg);
+        padding: var(--md);
+    }
+}
+
+.field.field-row {
+    flex-direction: row;
+    label {
+        border: 0;
+    }
+}
