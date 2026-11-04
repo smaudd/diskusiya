@@ -1,6 +1,174 @@
-import { t } from "shablon";
+import { t, store } from "shablon";
 import layout from "../components/layout";
+import discussionModal from "../components/disussion-modal";
 
+// TODO: Split this file into smaller modules
 export default function home() {
-    return layout(t.h1({}, "Discussions"));
+    const data = store({
+        discussions: [],
+        search: new URLSearchParams(location.search).get("search") || "",
+        sort: new URLSearchParams(location.search).get("sort") || "-updated",
+    });
+
+    async function getDiscussions() {
+        data.loading = true;
+        try {
+            const rules = {
+                sort: data.sort,
+                expand: "user",
+            };
+            if (data.search) {
+                rules.filter = `title~ '${data.search}' || content~ '${data.search}'`;
+            }
+            // TODO: Implement actual pagination
+            const list = await app.pb.collection("discussions").getList(1, 20, rules);
+            data.discussions = list.items;
+        } catch (err) {
+            console.log(err);
+            app.toasts.error(app.$("Something went wrong getting discussions"));
+        } finally {
+            data.loading = false;
+        }
+    }
+
+    async function onSubmitDiscussion(e) {
+        e.preventDefault();
+        const [{ value: title }, { value: content }] = e.target.elements;
+        try {
+            await app.pb.collection("discussions").create({
+                title,
+                content,
+                user: app.pb.authStore.record.id,
+            });
+            app.toasts.info(app.$("Discussion created!"));
+            app.modals.close(modal);
+            // cleanup filters to let user see their post on the first position
+            data.sort = "-updated";
+            data.search = "";
+            await getDiscussions();
+            e.target.reset();
+        } catch (err) {
+            app.toasts.error(app.$("Something went wrong saving the discussion"));
+        }
+    }
+
+    const modal = discussionModal({
+        onSubmitDiscussion,
+    });
+
+    async function onSortChange(e) {
+        data.sort = e.target.value;
+        await getDiscussions();
+        app.navigateQueryParam([
+            {
+                name: "sort",
+                value: data.sort,
+            },
+        ]);
+    }
+
+    async function onSearch(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const value = e.target.elements[0].value?.trim();
+        if (value === data.search) {
+            return;
+        }
+        data.search = e.target.elements[0].value?.trim() || "";
+        await getDiscussions();
+        // always set query param after request is done to prevent aborts
+        app.navigateQueryParam([
+            {
+                name: "search",
+                value: data.search,
+            },
+        ]);
+    }
+
+    async function onSearchInput(e) {
+        if (e.target.value === "" && data.search !== "") {
+            data.search = "";
+            await getDiscussions();
+            // always set query param after request is done to prevent aborts
+            app.navigateQueryParam([
+                {
+                    name: "search",
+                    value: "",
+                },
+            ]);
+        }
+    }
+
+    return layout(
+        t.div({ className: "flex justify-between", onmount: () => getDiscussions() }, [
+            t.h1({}, "Discussions"),
+            t.button(
+                {
+                    className: "btn",
+                    onclick: () => {
+                        app.modals.open(modal);
+                    },
+                },
+                app.$("Create discussion"),
+            ),
+        ]),
+        modal,
+        t.div({ className: "flex justify-between" }, [
+            t.form({ role: "search", className: "flex gap-md", onsubmit: onSearch }, [
+                t.div({ className: "field field-row" }, [
+                    t.input({
+                        placeholder: app.$("Search"),
+                        type: "search",
+                        value: data.search,
+                        oninput: onSearchInput,
+                        name: "search",
+                        id: "search",
+                    }),
+                    t.button({ type: "submit", className: "btn" }, app.$("Search")),
+                ]),
+            ]),
+            t.div({ className: "field field-row" }, [
+                t.label({}, app.$("Sort")),
+                t.select({ placeholder: app.$("Sort"), onchange: onSortChange }, [
+                    t.option(
+                        { value: "-updated", selected: data.sort === "-updated" },
+                        app.$("Latetst"),
+                    ),
+                    t.option(
+                        { value: "updated", selected: data.sort === "updated" },
+                        app.$("Oldest"),
+                    ),
+                ]),
+            ]),
+        ]),
+        t.div({ className: "flex flex-col gap-md", rid: data.discussions }, () => {
+            if (data.loading) {
+                return t.span({}, app.$("Loading..."));
+            }
+
+            if (data.discussions.length === 0) {
+                return t.span({}, app.$("No results found for '%%'", data.search));
+            }
+
+            return data.discussions.map((discussion) => {
+                const date = new Date(discussion.updated);
+                return t.a(
+                    {
+                        href: `/discussions/${discussion.id}`,
+                        className: "discussion-list-item",
+                    },
+                    t.h3({}, discussion.title),
+                    t.div({ className: "flex gap-md" }, [
+                        t.span({}, discussion.expand.user.name),
+                        t.span({}, "@"),
+                        t.span(
+                            {},
+                            `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`,
+                        ),
+                    ]),
+                    t.p({}, discussion.content),
+                );
+            });
+        }),
+    );
 }
