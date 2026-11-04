@@ -1,0 +1,25 @@
+{
+    "name": "diskusiya",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite & ../pocketbase serve",
+        "build": "vite build",
+        "preview": "vite preview",
+        "lint": "prettier . --write"
+    },
+    "devDependencies": {
+        "prettier": "^3.9.10",
+        "vite": "^8.3.5"
+    },
+    "dependencies": {
+        "pocketbase": "^0.28.2",
+        "shablon": "0.1.0-rc.1"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "printWidth": 90,
+        "bracketSameLine": true
+    }
+}
