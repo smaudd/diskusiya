@@ -3,6 +3,7 @@ import layout from "../components/layout";
 import discussionModal from "../components/disussion-modal";
 import slugify from "../utils/slugify";
 import randomString from "../utils/randomString";
+import recordMeta from "../components/record-meta";
 
 // TODO: Split this file into smaller modules
 export default function home() {
@@ -153,24 +154,21 @@ export default function home() {
                 if (data.search) {
                     return t.span({}, app.$("No results found for '%%'", data.search));
                 }
-                return t.span({}, app.$("Create your first discussion"))
+                return t.span({}, app.$("Create your first discussion"));
             }
 
             return data.discussions.map((discussion) => {
-                const date = new Date(discussion.updated);
                 return t.a(
                     {
-                        href: `/discussions/${discussion.id}`,
+                        href: `/d/${discussion.slug}`,
                         className: "discussion-list-item",
                     },
                     t.h3({}, discussion.title),
                     t.div({ className: "flex gap-md" }, [
-                        t.span({}, discussion.expand.user.name),
-                        t.span({}, "@"),
-                        t.span(
-                            {},
-                            `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`,
-                        ),
+                        recordMeta({
+                            author: discussion.expand.user.name,
+                            date: discussion.updated,
+                        }),
                     ]),
                     t.p({}, discussion.content),
                 );
