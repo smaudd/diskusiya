@@ -52,6 +52,7 @@ export default function home() {
             await getDiscussions();
             e.target.reset();
         } catch (err) {
+            console.log(err)
             app.toasts.error(app.$("Something went wrong saving the discussion"));
         }
     }
@@ -164,12 +165,10 @@ export default function home() {
                         className: "discussion-list-item",
                     },
                     t.h3({}, discussion.title),
-                    t.div({ className: "flex gap-md" }, [
-                        recordMeta({
-                            author: discussion.expand.user.name,
-                            date: discussion.updated,
-                        }),
-                    ]),
+                    () => recordMeta({
+                        author: discussion.expand.user.name,
+                        date: discussion.updated,
+                    }),
                     t.p({}, discussion.content),
                 );
             });
