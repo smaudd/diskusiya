@@ -179,8 +179,6 @@ export default function home() {
                 },
                 t.select,
                     ),
-                ]),
-            ]),
         ]),
         t.div({ className: "flex flex-col gap-md", rid: data.discussions }, () => {
             if (data.loading) {
