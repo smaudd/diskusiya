@@ -7,6 +7,8 @@ import randomString from "../utils/randomString";
 import recordMeta from "../components/recordMeta";
 import loader from "../components/loader";
 import pagination from "../components/pagination";
+import field from "../components/field";
+import discussionCard from "../components/discussionCard";
 
 // TODO: Split this file into smaller modules
 export default function home() {
@@ -181,21 +183,7 @@ export default function home() {
             }
             return [
                 t.div({}, [
-                    data.discussions.map((discussion) => {
-                        return t.a(
-                            {
-                                href: `/d/${discussion.slug}`,
-                                className: "discussion-list-item",
-                            },
-                            t.h3({}, discussion.title),
-                            recordMeta({
-                                author: discussion.expand.user.name,
-                                updated: discussion.updated,
-                                created: discussion.created,
-                            }),
-                            t.p({}, discussion.content),
-                        );
-                    }),
+                    data.discussions.map(discussionCard),
                     pagination({ data }),
                 ]),
             ];
