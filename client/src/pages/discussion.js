@@ -42,7 +42,8 @@ export default function discussion(route) {
             return [
                 recordMeta({
                     author: data.discussion?.expand?.user?.name,
-                    date: data.discussion?.updated,
+                    updated: data.discussion?.updated,
+                    created: data.discussion?.created
                 }),
                 t.h1({}, () => data.discussion?.title),
                 t.p({}, () => data.discussion?.content),

@@ -169,7 +169,8 @@ export default function home() {
                     () =>
                         recordMeta({
                             author: discussion.expand.user.name,
-                            date: discussion.updated,
+                            updated: discussion.updated,
+                            created: discussion.created,
                         }),
                     t.p({}, discussion.content),
                 );
