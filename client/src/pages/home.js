@@ -1,18 +1,24 @@
 import { t, store } from "shablon";
 import layout from "../components/layout";
+import notfound from "../components/notfound";
 import discussionModal from "../components/disussionModal";
 import slugify from "../utils/slugify";
 import randomString from "../utils/randomString";
 import recordMeta from "../components/recordMeta";
 import loader from "../components/loader";
+import pagination from "../components/pagination";
 
 // TODO: Split this file into smaller modules
 export default function home() {
+    const searchParams = new URLSearchParams(location.search);
     const data = store({
         discussions: [],
-        search: new URLSearchParams(location.search).get("search") || "",
-        sort: new URLSearchParams(location.search).get("sort") || "-updated",
+        search: searchParams.get("search") || "",
+        sort: searchParams.get("sort") || "-updated",
+        page: +searchParams.get("page") || 1, // if page is forced to 0 it will evaluate false and always render page 1
         totalItems: null,
+        limit: 3,
+        totalPages: null,
     });
 
     async function getDiscussions() {
@@ -21,15 +27,25 @@ export default function home() {
             const rules = {
                 sort: data.sort,
                 expand: "user",
-                fields: "slug,title,content:excerpt(200,true),expand.user.name,updated,created"
+                fields: "slug,title,content:excerpt(200,true),expand.user.name,updated,created",
             };
             if (data.search) {
                 rules.filter = `title~ '${data.search}' || content~ '${data.search}'`;
             }
-            // TODO: Implement actual pagination
-            const list = await app.pb.collection("discussions").getList(1, 20, rules);
+            const list = await app.pb
+                .collection("discussions")
+                .getList(data.page, data.limit, rules);
+            data.totalPages = list.totalPages;
             data.discussions = list.items;
             data.totalItems = list.totalItems;
+            if (data.page > data.totalPages) {
+                app.navigateQueryParam([
+                    {
+                        name: "page",
+                        value: 1,
+                    },
+                ]);
+            }
         } catch (err) {
             console.log(err);
             app.toasts.error(app.$("Something went wrong getting discussions"));
@@ -112,7 +128,7 @@ export default function home() {
         t.div({ className: "flex justify-between", onmount: () => getDiscussions() }, [
             t.h1({ className: "flex gap-md" }, () => [
                 t.span({}, app.$("Discussions")),
-                data.totalItems ? t.span({},`(${data.totalItems})`) : null,
+                data.totalItems ? t.span({}, `(${data.totalItems})`) : null,
             ]),
             t.button(
                 {
@@ -157,30 +173,32 @@ export default function home() {
             if (data.loading) {
                 return loader();
             }
-
             if (data.discussions.length === 0) {
                 if (data.search) {
                     return t.span({}, app.$("No results found for '%%'", data.search));
                 }
                 return t.span({}, app.$("Create your first discussion"));
             }
-
-            return data.discussions.map((discussion) => {
-                return t.a(
-                    {
-                        href: `/d/${discussion.slug}`,
-                        className: "discussion-list-item",
-                    },
-                    t.h3({}, discussion.title),
-                    () =>
-                        recordMeta({
-                            author: discussion.expand.user.name,
-                            updated: discussion.updated,
-                            created: discussion.created,
-                        }),
-                    t.p({}, discussion.content),
-                );
-            });
+            return [
+                t.div({}, [
+                    data.discussions.map((discussion) => {
+                        return t.a(
+                            {
+                                href: `/d/${discussion.slug}`,
+                                className: "discussion-list-item",
+                            },
+                            t.h3({}, discussion.title),
+                            recordMeta({
+                                author: discussion.expand.user.name,
+                                updated: discussion.updated,
+                                created: discussion.created,
+                            }),
+                            t.p({}, discussion.content),
+                        );
+                    }),
+                    pagination({ data }),
+                ]),
+            ];
         }),
     );
 }

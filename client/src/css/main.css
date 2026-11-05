@@ -36,6 +36,13 @@ nav {
     gap: var(--xl);
 }
 
+a[aria-disabled="true"] {
+  color: lightgray;
+  display: inline-block;  /* For IE11/ MS Edge bug */
+  pointer-events: none;
+  text-decoration: none;
+}
+
 ::view-transition-group(root) {
     animation-duration: 100ms;
 }
