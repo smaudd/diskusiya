@@ -157,16 +157,27 @@ export default function home() {
                     t.button({ type: "submit", className: "btn" }, app.$("Search")),
                 ]),
             ]),
-            t.div({ className: "field field-row" }, [
-                t.label({}, app.$("Sort")),
-                t.select({ placeholder: app.$("Sort"), onchange: onSortChange }, [
-                    t.option(
-                        { value: "-updated", selected: data.sort === "-updated" },
-                        app.$("Latetst"),
-                    ),
-                    t.option(
-                        { value: "updated", selected: data.sort === "updated" },
-                        app.$("Oldest"),
+            field(
+                {
+                    id: "sort",
+                    className: "field-row",
+                    label: app.$("Sort"),
+                    placeholder: app.$("Sort"),
+                    onchange: onSortChange,
+                    options: [
+                        {
+                            label: app.$("Latetst"),
+                            value: "-updated",
+                            selected: data.sort === "-updated",
+                        },
+                        {
+                            label: app.$("Oldest"),
+                            value: "updated",
+                            selected: data.sort === "updated",
+                        },
+                    ],
+                },
+                t.select,
                     ),
                 ]),
             ]),
