@@ -15,10 +15,6 @@ import layout from "./components/layout";
 const app = document.getElementById("app");
 router(
     {
-        // TODO: Not sure if this is the way to 404 every not known route but it seems to work
-        "/{any}": () => {
-            app.replaceChildren(layout(notfound()));
-        },
         "/": () => {
             app.replaceChildren(home());
         },
@@ -39,6 +35,11 @@ router(
             app.pb.authStore.isValid
                 ? app.replaceChildren(settings())
                 : app.navigate("/login");
+        },
+        // TODO: Not sure if this is the way to 404 every not known route but it seems to work
+        "/{any}": () => {
+            console.log("hola?");
+            app.replaceChildren(layout(notfound()));
         },
     },
     { pretty: true },
