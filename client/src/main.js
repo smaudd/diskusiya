@@ -13,37 +13,42 @@ import notfound from "./components/notfound";
 import layout from "./components/layout";
 
 const app = document.getElementById("app");
-router(
-    {
-        "/": () => {
-            app.replaceChildren(home());
-        },
-        "/d/{slug}": (route) => {
-            app.pb.authStore.isValid
-                ? app.replaceChildren(discussion(route))
-                : app.navigate("/");
-        },
-        "/login": () => {
-            app.pb.authStore.isValid ? app.navigate("/") : app.replaceChildren(login());
-        },
-        "/register": () => {
-            app.pb.authStore.isValid
-                ? app.navigate("/")
-                : app.replaceChildren(register());
-        },
-        "/settings": () => {
-            app.pb.authStore.isValid
-                ? app.replaceChildren(settings())
-                : app.navigate("/login");
-        },
-        // TODO: Not sure if this is the way to 404 every not known route but it seems to work
-        "/{any}": () => {
-            console.log("hola?");
-            app.replaceChildren(layout(notfound()));
-        },
+const routes = {
+    "/": () => {
+        app.replaceChildren(home());
     },
-    { pretty: true },
-);
+    "/d/{slug}": (route) => {
+        app.pb.authStore.isValid
+            ? app.replaceChildren(discussion(route))
+            : app.navigate("/");
+    },
+    "/login": () => {
+        app.pb.authStore.isValid ? app.navigate("/") : app.replaceChildren(login());
+    },
+    "/register": () => {
+        app.pb.authStore.isValid ? app.navigate("/") : app.replaceChildren(register());
+    },
+    "/settings": () => {
+        app.pb.authStore.isValid
+            ? app.replaceChildren(settings())
+            : app.navigate("/login");
+    },
+    // TODO: Not sure if this is the way to 404 every not known route but it seems to work
+    "/{any}": () => {
+        app.replaceChildren(layout(notfound()));
+    },
+};
+
+// Add routes ending with backslash to allow both ways
+for (const routeKey of Object.keys(routes)) {
+    if (routeKey == "/") continue
+    routes[`${routeKey}/`] = (route) => {
+        // fake redirect to route without backslash
+        app.navigate(route.path.slice(0, route.path.length - 1))
+    }
+}
+
+router(routes, { pretty: true });
 
 window.app = window.app || {};
 window.app.navigate = (route) => {
