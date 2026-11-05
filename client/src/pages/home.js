@@ -1,10 +1,8 @@
 import { t, store } from "shablon";
 import layout from "../components/layout";
-import notfound from "../components/notfound";
 import discussionModal from "../components/disussionModal";
 import slugify from "../utils/slugify";
 import randomString from "../utils/randomString";
-import recordMeta from "../components/recordMeta";
 import loader from "../components/loader";
 import pagination from "../components/pagination";
 import field from "../components/field";
