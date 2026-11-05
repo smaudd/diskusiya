@@ -4,6 +4,8 @@
 
 **Diskusiya** (discussion in Bulgarian) is heavily inspired by the works of **Gani Georgiev** and the name was chosen to follow the same naming idea as **Shablon**
 
+This project uses Pocketbase v0.40.5, Shablon 0.1.0-rc.1 and Vite 8.3.5 with pnpm
+
 This is primarly an experiment to hone my knowledge in Pocketbase and Shablon 
 
 ### Already done (with needed improvements of course)
@@ -27,6 +29,7 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Complete user data updates (email, password, name, avatars)
 - Take a look at security
 - Improve the cache system
+- Include Pocketbase binary with the project? Not sure how to handle this yet
 
 ### Caveats
 
