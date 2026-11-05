@@ -1,6 +1,7 @@
 import { t } from "shablon";
 import { initI18n } from "../i18n";
 import layout from "../components/layout";
+import field from "../components/field";
 
 export default function settings() {
     async function onSubmit(e) {
@@ -37,23 +38,20 @@ export default function settings() {
 
     const form = t.form(
         { onsubmit: onSubmit },
-        t.div({ className: "field" }, [
-            t.label({}, app.$("Language")),
-            t.select(
-                { placeholder: app.$("Language"), required: true },
-                languageOptions.map((option) =>
-                    t.option(
-                        {
-                            value: option.value,
-                            selected: app.pb.authStore.record.language === option.value,
-                        },
-                        option.label,
-                    ),
-                ),
-            ),
-            t.button({ type: "submit", className: "btn" }, app.$("Save")),
-        ]),
-        
+        field(
+            {
+                label: app.$("Language"),
+                placeholder: app.$("Language"),
+                required: true,
+                options: languageOptions.map((option) => ({
+                    value: option.value,
+                    label: option.label,
+                    selected: app.pb.authStore.record.language === option.value,
+                })),
+            },
+            t.select,
+        ),
+        t.button({ type: "submit", className: "btn" }, app.$("Save")),
     );
     return layout(
         t.h1(
