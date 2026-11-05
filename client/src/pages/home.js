@@ -7,7 +7,7 @@ import loader from "../components/loader";
 import pagination from "../components/pagination";
 import field from "../components/field";
 import discussionCard from "../components/discussionCard";
-import { flushCache, getDiscussions } from "../services/data";
+import { getDiscussions } from "../services/data";
 
 // keep this in the global scope to prevent redefinitions inside the page's function
 const cacheKeys = []
@@ -36,7 +36,7 @@ export default function home() {
             });
             app.toasts.info(app.$("Discussion created!"));
             app.modals.close(modal);
-            cacheKeys.forEach(flushCache)
+            cacheKeys.forEach(app.cache.flush)
             // cleanup filters to let user see their post on the first position
             app.navigateQueryParam([
                 {
@@ -191,9 +191,7 @@ export default function home() {
                 }
                 return t.span({}, app.$("Create your first discussion"));
             }
-            return [
-                t.div({}, [data.discussions.map(discussionCard), pagination({ data })]),
-            ];
+            return t.div({}, [data.discussions.map(discussionCard), pagination({ data })]);
         }),
     );
 }

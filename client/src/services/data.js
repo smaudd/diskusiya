@@ -66,3 +66,14 @@ function cleanExpiredCache() {
         }
     }
 }
+
+function flushAll() {
+    cacheMap.clear()
+}
+
+window.app = window.app || {};
+window.app.cache = {
+    cacheMap: cacheMap,
+    flush: flushCache,
+    flushAll: flushAll,
+}
