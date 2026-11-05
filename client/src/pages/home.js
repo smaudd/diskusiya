@@ -1,9 +1,9 @@
 import { t, store } from "shablon";
 import layout from "../components/layout";
-import discussionModal from "../components/disussion-modal";
+import discussionModal from "../components/disussionModal";
 import slugify from "../utils/slugify";
 import randomString from "../utils/randomString";
-import recordMeta from "../components/record-meta";
+import recordMeta from "../components/recordMeta";
 
 // TODO: Split this file into smaller modules
 export default function home() {
