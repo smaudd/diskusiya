@@ -143,7 +143,7 @@ function addToast(textOrElem, options = {}) {
                 t.button(
                     {
                         type: "button",
-                        className: "toast-remove",
+                        className: "toast-remove btn",
                         title: app.$("Clear"),
                         onclick: () => removeToast(toastRef),
                     },
