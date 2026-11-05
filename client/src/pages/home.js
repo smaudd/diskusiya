@@ -40,14 +40,6 @@ export default function home() {
             data.totalPages = list.totalPages;
             data.discussions = list.items;
             data.totalItems = list.totalItems;
-            if (data.page > data.totalPages) {
-                app.navigateQueryParam([
-                    {
-                        name: "page",
-                        value: 1,
-                    },
-                ]);
-            }
         } catch (err) {
             console.log(err);
             app.toasts.error(app.$("Something went wrong getting discussions"));
@@ -102,12 +94,18 @@ export default function home() {
             return;
         }
         data.search = e.target.elements[0].value?.trim() || "";
-        await getDiscussions();
-        // always set query param after request is done to prevent aborts
         app.navigateQueryParam([
             {
                 name: "search",
                 value: data.search,
+            },
+            {
+                name: "page",
+                value: 1,
+            },
+            {
+                name: "sort",
+                value: data.sort,
             },
         ]);
     }
@@ -115,12 +113,18 @@ export default function home() {
     async function onSearchInput(e) {
         if (e.target.value === "" && data.search !== "") {
             data.search = "";
-            await getDiscussions();
-            // always set query param after request is done to prevent aborts
             app.navigateQueryParam([
                 {
                     name: "search",
                     value: "",
+                },
+                {
+                    name: "page",
+                    value: 1,
+                },
+                {
+                    name: "sort",
+                    value: data.sort,
                 },
             ]);
         }
@@ -178,7 +182,7 @@ export default function home() {
                     ],
                 },
                 t.select,
-                    ),
+            ),
         ]),
         t.div({ className: "flex flex-col gap-md", rid: data.discussions }, () => {
             if (data.loading) {
