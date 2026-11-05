@@ -1,4 +1,5 @@
 import { t } from "shablon";
+import field from "./field";
 
 export default function discussionModal({ onSubmitDiscussion }) {
     return t.div(
@@ -10,26 +11,20 @@ export default function discussionModal({ onSubmitDiscussion }) {
             { className: "modal-content" },
             t.form({ id: "discussion-form", onsubmit: onSubmitDiscussion }, [
                 t.div({ className: "flex flex-col gap-md" }, [
-                    t.div(
-                        { className: "field" },
-                        t.label({ for: "title" }, app.$("Title")),
-                        t.input({
-                            id: "title",
-                            name: "title",
-                            required: true,
-                            placeholder: app.$("Title"),
-                        }),
-                    ),
-                    t.div(
-                        { className: "field" },
-                        t.label({ for: "content" }, app.$("Content")),
-                        t.textarea({
-                            id: "content",
-                            name: "content",
-                            required: true,
-                            placeholder: app.$("Content"),
-                        }),
-                    ),
+                    field({
+                        label:  app.$("Title"),
+                        id: "title",
+                        name: "title",
+                        required: true,
+                        placeholder: app.$("Title"),
+                    }, t.input),
+                    field({
+                        label:  app.$("Content"),
+                        id: "content",
+                        name: "content",
+                        required: true,
+                        placeholder: app.$("Content"),
+                    }, t.textarea),
                 ]),
             ]),
         ),
