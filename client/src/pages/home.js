@@ -1,6 +1,8 @@
 import { t, store } from "shablon";
 import layout from "../components/layout";
 import discussionModal from "../components/disussion-modal";
+import slugify from "../utils/slugify";
+import randomString from "../utils/randomString";
 
 // TODO: Split this file into smaller modules
 export default function home() {
@@ -38,6 +40,7 @@ export default function home() {
             await app.pb.collection("discussions").create({
                 title,
                 content,
+                slug: `${slugify(title)}-${randomString()}`,
                 user: app.pb.authStore.record.id,
             });
             app.toasts.info(app.$("Discussion created!"));
@@ -147,7 +150,10 @@ export default function home() {
             }
 
             if (data.discussions.length === 0) {
-                return t.span({}, app.$("No results found for '%%'", data.search));
+                if (data.search) {
+                    return t.span({}, app.$("No results found for '%%'", data.search));
+                }
+                return t.span({}, app.$("Create your first discussion"))
             }
 
             return data.discussions.map((discussion) => {
