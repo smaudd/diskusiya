@@ -7,8 +7,11 @@ import loader from "../components/loader";
 import pagination from "../components/pagination";
 import field from "../components/field";
 import discussionCard from "../components/discussionCard";
+import { flushCache, getDiscussions } from "../services/data";
 
-// TODO: Split this file into smaller modules
+// keep this in the global scope to prevent redefinitions inside the page's function
+const cacheKeys = []
+
 export default function home() {
     const searchParams = new URLSearchParams(location.search);
     const data = store({
@@ -20,31 +23,6 @@ export default function home() {
         limit: 3,
         totalPages: null,
     });
-
-    async function getDiscussions() {
-        data.loading = true;
-        try {
-            const rules = {
-                sort: data.sort,
-                expand: "user",
-                fields: "slug,title,content:excerpt(200,true),expand.user.name,updated,created",
-            };
-            if (data.search) {
-                rules.filter = `title~ '${data.search}' || content~ '${data.search}'`;
-            }
-            const list = await app.pb
-                .collection("discussions")
-                .getList(data.page, data.limit, rules);
-            data.totalPages = list.totalPages;
-            data.discussions = list.items;
-            data.totalItems = list.totalItems;
-        } catch (err) {
-            console.log(err);
-            app.toasts.error(app.$("Something went wrong getting discussions"));
-        } finally {
-            data.loading = false;
-        }
-    }
 
     async function onSubmitDiscussion(e) {
         e.preventDefault();
@@ -58,10 +36,22 @@ export default function home() {
             });
             app.toasts.info(app.$("Discussion created!"));
             app.modals.close(modal);
+            cacheKeys.forEach(flushCache)
             // cleanup filters to let user see their post on the first position
-            data.sort = "-updated";
-            data.search = "";
-            await getDiscussions();
+            app.navigateQueryParam([
+                {
+                    name: "sort",
+                    value: "-updated",
+                },
+                {
+                    name: "page",
+                    value: 1,
+                },
+                {
+                    name: "search",
+                    value: "",
+                },
+            ]);
             e.target.reset();
         } catch (err) {
             console.log(err);
@@ -129,21 +119,30 @@ export default function home() {
     }
 
     return layout(
-        t.div({ className: "flex justify-between", onmount: () => getDiscussions() }, [
-            t.h1({ className: "flex gap-md" }, () => [
-                t.span({}, app.$("Discussions")),
-                data.totalItems ? t.span({}, `(${data.totalItems})`) : null,
-            ]),
-            t.button(
-                {
-                    className: "btn",
-                    onclick: () => {
-                        app.modals.open(modal);
-                    },
+        t.div(
+            {
+                className: "flex justify-between",
+                onmount: async () => {
+                    const cacheKey = await getDiscussions({ data });
+                    cacheKeys.push(cacheKey)
                 },
-                app.$("Create discussion"),
-            ),
-        ]),
+            },
+            [
+                t.h1({ className: "flex gap-md" }, () => [
+                    t.span({}, app.$("Discussions")),
+                    data.totalItems ? t.span({}, `(${data.totalItems})`) : null,
+                ]),
+                t.button(
+                    {
+                        className: "btn",
+                        onclick: () => {
+                            app.modals.open(modal);
+                        },
+                    },
+                    app.$("Create discussion"),
+                ),
+            ],
+        ),
         modal,
         t.div({ className: "flex justify-between" }, [
             t.form({ role: "search", className: "flex gap-md", onsubmit: onSearch }, [
@@ -193,10 +192,7 @@ export default function home() {
                 return t.span({}, app.$("Create your first discussion"));
             }
             return [
-                t.div({}, [
-                    data.discussions.map(discussionCard),
-                    pagination({ data }),
-                ]),
+                t.div({}, [data.discussions.map(discussionCard), pagination({ data })]),
             ];
         }),
     );
