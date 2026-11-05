@@ -12,6 +12,7 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Modals with the exact same implementation as Pocketbase's client admin app
 - Toasts with the exact same implementation as Pocketbase's client admin app
 - Internationalization using user's language preference
+- Client cache for discussions listings (this is wacky at best but seems to partially work ATM)
 
 
 ### Caveats
