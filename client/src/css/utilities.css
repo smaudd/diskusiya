@@ -29,3 +29,7 @@
 .gap-sm {
     gap: var(--sm);
 }
+
+.bold {
+    font-weight: bold;
+}
