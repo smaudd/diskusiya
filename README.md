@@ -15,6 +15,14 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Client cache for discussions listings (this is wacky at best but seems to partially work ATM)
 
 
+### TODO
+
+- Testing
+- Discussion edition
+- Discussion deletion
+- Discussion replies
+- Discussion reply with replying to
+
 ### Caveats
 
 I'm stil unsure if I should keep using Shablon with ES6 imports instead of making it available in the global scope like pocketbase does 
