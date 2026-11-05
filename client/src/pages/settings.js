@@ -30,21 +30,39 @@ export default function settings() {
         },
     ];
 
+    function onLogout() {
+        app.pb.authStore.clear();
+        app.navigate("/login");
+    }
+
     const form = t.form(
         { onsubmit: onSubmit },
-        t.select(
-            { placeholder: app.$("Language"), required: true },
-            languageOptions.map((option) =>
-                t.option(
-                    {
-                        value: option.value,
-                        selected: app.pb.authStore.record.language === option.value,
-                    },
-                    option.label,
+        t.div({ className: "field" }, [
+            t.label({}, app.$("Language")),
+            t.select(
+                { placeholder: app.$("Language"), required: true },
+                languageOptions.map((option) =>
+                    t.option(
+                        {
+                            value: option.value,
+                            selected: app.pb.authStore.record.language === option.value,
+                        },
+                        option.label,
+                    ),
                 ),
             ),
-        ),
-        t.button({ type: "submit" }, app.$("Save")),
+            t.button({ type: "submit", className: "btn" }, app.$("Save")),
+        ]),
+        
     );
-    return layout(t.h1({}, app.$("Settings"), form));
+    return layout(
+        t.h1(
+            {},
+            app.$("Settings"),
+            form,
+            t.div({}, [
+                t.button({ className: "btn", onclick: onLogout }, app.$("Logout")),
+            ]),
+        ),
+    );
 }
