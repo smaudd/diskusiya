@@ -12,6 +12,10 @@ import settings from "./pages/settings";
 const app = document.getElementById("app");
 router(
     {
+        // TODO: Not sure if this is the way to 404 every not known route but it seems to work
+        "/{any}": () => {
+            app.replaceChildren(layout(notfound()));
+        },
         "/": () => {
             app.replaceChildren(home());
         },
