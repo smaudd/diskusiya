@@ -13,13 +13,13 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Toasts with the exact same implementation as Pocketbase's client admin app
 - Multi language support using user's language preference
 - Client cache for discussion listings (this is wacky at best but seems to work)
-
+- Discussion listings use URLs with slugs
+- Discussion edition and deletion (if title is updated slug will be too)
 
 ### TODO
 
 - Testing
-- Discussion edition
-- Discussion deletion
+- Document with JSDoc
 - Discussion replies
 - Discussion reply with replying to
 
