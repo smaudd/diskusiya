@@ -17,3 +17,7 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 ### Caveats
 
 I'm stil unsure if I should keep using Shablon with ES6 imports instead of making it available in the global scope like pocketbase does 
+
+### Notice
+
+This project is being developed without AI agents or assitance since I'm tired of that bullshit
