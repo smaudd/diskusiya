@@ -35,7 +35,7 @@ export default function discussionModal({ onSubmitDiscussion }) {
         ),
         t.footer({ className: "modal-footer" }, [
             t.button(
-                { className: "btn borderless", onclick: () => app.modals.close(el) },
+                { className: "btn borderless", onclick: () => app.modals.close(this) },
                 app.$("Cancel"),
             ),
             t.button({ className: "btn", "html-form": "discussion-form" }, app.$("Save")),
