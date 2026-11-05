@@ -4,6 +4,7 @@ import discussionModal from "../components/disussionModal";
 import slugify from "../utils/slugify";
 import randomString from "../utils/randomString";
 import recordMeta from "../components/recordMeta";
+import loader from "../components/loader";
 
 // TODO: Split this file into smaller modules
 export default function home() {
@@ -52,7 +53,7 @@ export default function home() {
             await getDiscussions();
             e.target.reset();
         } catch (err) {
-            console.log(err)
+            console.log(err);
             app.toasts.error(app.$("Something went wrong saving the discussion"));
         }
     }
@@ -148,7 +149,7 @@ export default function home() {
         ]),
         t.div({ className: "flex flex-col gap-md", rid: data.discussions }, () => {
             if (data.loading) {
-                return t.span({}, app.$("Loading..."));
+                return loader();
             }
 
             if (data.discussions.length === 0) {
@@ -165,10 +166,11 @@ export default function home() {
                         className: "discussion-list-item",
                     },
                     t.h3({}, discussion.title),
-                    () => recordMeta({
-                        author: discussion.expand.user.name,
-                        date: discussion.updated,
-                    }),
+                    () =>
+                        recordMeta({
+                            author: discussion.expand.user.name,
+                            date: discussion.updated,
+                        }),
                     t.p({}, discussion.content),
                 );
             });
