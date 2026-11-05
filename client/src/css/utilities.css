@@ -18,6 +18,10 @@
     justify-content: space-between;
 }
 
+.justify-center {
+    justify-content: center;
+}
+
 .gap-md {
     gap: var(--md);
 }
@@ -32,4 +36,8 @@
 
 .bold {
     font-weight: bold;
+}
+
+.mt-md {
+    margin-top: var(--md);
 }
