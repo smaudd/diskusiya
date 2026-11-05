@@ -4,8 +4,8 @@ export default function field(
     props,
     fieldElement,
 ) {
-    const className = String(props.className)
-    const options = Array.from(props.options || [])
+    const className = props.className
+    const options = props.options || []
     delete props.className
     delete props.options
     return t.div(
