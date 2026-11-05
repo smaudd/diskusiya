@@ -7,7 +7,10 @@ import "./components/modal";
 import login from "./pages/login";
 import home from "./pages/home";
 import register from "./pages/register";
+import discussion from "./pages/discussion";
 import settings from "./pages/settings";
+import notfound from "./components/notfound";
+import layout from "./components/layout";
 
 const app = document.getElementById("app");
 router(
@@ -18,6 +21,11 @@ router(
         },
         "/": () => {
             app.replaceChildren(home());
+        },
+        "/d/{slug}": (route) => {
+            app.pb.authStore.isValid
+                ? app.replaceChildren(discussion(route))
+                : app.navigate("/");
         },
         "/login": () => {
             app.pb.authStore.isValid ? app.navigate("/") : app.replaceChildren(login());
