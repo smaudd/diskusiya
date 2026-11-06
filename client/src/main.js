@@ -1,9 +1,10 @@
 import { router } from "shablon";
 import "./pb";
-import "./i18n";
+import "./utils/i18n";
 import "./css/main.css";
 import "./components/toast";
 import "./components/modal";
+import "./utils/markdown";
 import login from "./pages/login";
 import home from "./pages/home";
 import register from "./pages/register";
@@ -20,18 +21,18 @@ const routes = {
     "/d/{slug}": (route) => {
         app.pb.authStore.isValid
             ? app.replaceChildren(discussion(route))
-            : app.navigate("/");
+            : navigate("/");
     },
     "/login": () => {
-        app.pb.authStore.isValid ? app.navigate("/") : app.replaceChildren(login());
+        app.pb.authStore.isValid ? navigate("/") : app.replaceChildren(login());
     },
     "/register": () => {
-        app.pb.authStore.isValid ? app.navigate("/") : app.replaceChildren(register());
+        app.pb.authStore.isValid ? navigate("/") : app.replaceChildren(register());
     },
     "/settings": () => {
         app.pb.authStore.isValid
             ? app.replaceChildren(settings())
-            : app.navigate("/login");
+            : navigate("/login");
     },
     // TODO: Not sure if this is the way to 404 every not known route but it seems to work
     "/{any}": () => {
@@ -41,28 +42,12 @@ const routes = {
 
 // Add routes ending with backslash to allow both ways
 for (const routeKey of Object.keys(routes)) {
-    if (routeKey == "/") continue
+    if (routeKey == "/") continue;
     routes[`${routeKey}/`] = (route) => {
         // fake redirect to route without backslash
-        app.navigate(route.path.slice(0, route.path.length - 1))
-    }
+        navigate(route.path.slice(0, route.path.length - 1));
+    };
 }
 
 router(routes, { pretty: true });
 
-window.app = window.app || {};
-window.app.navigate = (route) => {
-    history.pushState({}, null, route);
-};
-
-window.app.navigateQueryParam = (paramsList) => {
-    const params = new URLSearchParams(window.location.search);
-    paramsList.forEach((param) => {
-        params.set(param.name, param.value);
-    });
-    history.replaceState(
-        {},
-        "",
-        decodeURIComponent(`${window.location.pathname}?${params}`),
-    );
-};

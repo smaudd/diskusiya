@@ -1,0 +1,22 @@
+.subreply {
+    margin-left: var(--xl);
+}
+
+.subreply, .reply-block {
+    padding: var(--md);
+    gap: var(--md);
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--surface-color);
+}
+
+.reply-form {
+    margin-top: var(--md);
+}
+
+.record-meta {
+    display: flex;
+    gap: var(--md);
+    justify-content: space-between;
+    margin: var(--md) 0;
+}

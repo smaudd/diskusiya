@@ -14,8 +14,20 @@
     align-items: center;
 }
 
+.items-end {
+    align-items: end;
+}
+
+.items-start {
+    align-items: start;
+}
+
 .justify-between {
     justify-content: space-between;
+}
+
+.justify-end {
+    justify-content: flex-end;
 }
 
 .justify-center {

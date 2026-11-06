@@ -1,5 +1,7 @@
 import { t } from "shablon";
 import layout from "../components/layout";
+import { $ } from "../utils/i18n"
+import toasts from "../components/toast"
 
 export default function login() {
     async function onSubmit(e) {
@@ -8,20 +10,20 @@ export default function login() {
         try {
             await app.pb.collection("users").authWithPassword(email, password);
             if (app.pb.authStore.isValid) {
-                app.toasts.info(app.$("Welcome back!"));
-                app.navigate("/");
+                toasts.info($("Welcome back!"));
+                navigate("/");
             }
         } catch (err) {
             const message = err.message;
-            app.toasts.error(app.$(message));
+            toasts.error($(message));
         }
     }
 
     const form = t.form(
         { onsubmit: onSubmit },
-        t.input({ placeholder: app.$("Username"), required: true }),
-        t.input({ placeholder: app.$("Password"), type: "password", required: true }),
-        t.button({ type: "submit" }, app.$("Submit")),
+        t.input({ placeholder: $("Username"), required: true }),
+        t.input({ placeholder: $("Password"), type: "password", required: true }),
+        t.button({ type: "submit" }, $("Submit")),
     );
-    return layout(t.h1({}, app.$("Login"), form));
+    return layout(t.h1({}, $("Login"), form));
 }

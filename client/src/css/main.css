@@ -6,6 +6,7 @@
 @import "./forms.css";
 @import "./buttons.css";
 @import "./feed.css";
+@import "./discussions.css";
 
 * {
     box-sizing: border-box;
@@ -50,4 +51,12 @@ a[aria-disabled="true"] {
 .page {
     display: grid;
     gap: var(--xl);
+}
+
+.focus {
+    animation: fadein 1s forwards;
+}
+
+p {
+    margin: 0;
 }

@@ -1,8 +1,9 @@
 import { t, store } from "shablon";
+import { $ } from "../utils/i18n"
 import field from "./field";
 
 export default function discussionModal({
-    title = app.$("Create discussion"),
+    title = $("Create discussion"),
     onSubmitDiscussion,
     values,
 }) {
@@ -29,22 +30,22 @@ export default function discussionModal({
                     t.div({ className: "flex flex-col gap-md" }, [
                         field(
                             {
-                                label: app.$("Title"),
+                                label: $("Title"),
                                 id: "title",
                                 name: "title",
                                 required: true,
-                                placeholder: app.$("Title"),
+                                placeholder: $("Title"),
                                 value: values?.title,
                             },
                             t.input,
                         ),
                         field(
                             {
-                                label: app.$("Content"),
+                                label: $("Content"),
                                 id: "content",
                                 name: "content",
                                 required: true,
-                                placeholder: app.$("Content"),
+                                placeholder: $("Content"),
                                 value: values?.content,
                             },
                             t.textarea,
@@ -57,10 +58,10 @@ export default function discussionModal({
             t.button(
                 // TODO: Not sure how this usage works here but it does
                 { className: "btn borderless", onclick: () => app.modals.close(this) },
-                app.$("Cancel"),
+                $("Cancel"),
             ),
             t.button({ className: "btn", "html-form": "discussion-form" }, () =>
-                data.loading ? app.$("Loading...") : app.$("Save"),
+                data.loading ? $("Loading...") : $("Save"),
             ),
         ]),
     );

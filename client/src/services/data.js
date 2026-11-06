@@ -6,6 +6,7 @@
  */
 
 import logger from "./logger";
+import toasts from "../components/toast"
 
 const cacheMap = new Map();
 
@@ -51,7 +52,7 @@ export async function getDiscussions({ data }) {
         data.totalItems = list.totalItems;
     } catch (err) {
         console.log(err);
-        app.toasts.error(app.$("Something went wrong getting discussions"));
+        toasts.error($("Something went wrong getting discussions"));
     } finally {
         data.loading = false;
     }

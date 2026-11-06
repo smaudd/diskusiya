@@ -67,7 +67,7 @@ let oldActiveElem;
  *
  * @param {Element} el
  */
-window.app.modals.open = async function (el) {
+async function open(el) {
     if (!el?.isConnected) {
         console.error("modals.open requies an active DOM element", el);
         return;
@@ -126,7 +126,7 @@ window.app.modals.open = async function (el) {
  * @param {Element} [el]
  * @param {boolean} [forceClose]
  */
-window.app.modals.close = async function (el = null, forceClose = false) {
+async function close(el = null, forceClose = false) {
     el = el || findLargestZIndexModal();
     if (!el) {
         return;
@@ -260,6 +260,12 @@ function findLargestZIndexModal(excludeEl) {
  * Returns the current top-most open modal element.
  * @return {Element|undefined}
  */
-window.app.modals.getTop = function () {
+function getTop() {
     return findLargestZIndexModal();
 };
+
+export default {
+    open,
+    close,
+    getTop
+}

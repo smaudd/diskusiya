@@ -1,4 +1,5 @@
 import { t } from "shablon";
+import { $ } from "../utils/i18n"
 
 export default function pagination({ data }) {
     const params = new URLSearchParams(window.location.search)
@@ -13,14 +14,14 @@ export default function pagination({ data }) {
                 href: `/?page=1${paramsString}`,
                 ariaDisabled: data.page <= 1,
             },
-            app.$("<<"),
+            $("<<"),
         ),
         t.a(
             {
                 href: `/?page=${+data.page - 1}${paramsString}`,
                 ariaDisabled: data.page === 1,
             },
-            app.$("<"),
+            $("<"),
         ),
         () => t.span({}, "..."),
         t.span({}, data.page),
@@ -31,7 +32,7 @@ export default function pagination({ data }) {
                     href: `/?page=${+data.page + 1}${paramsString}`,
                     ariaDisabled: data.page >= data.totalPages,
                 },
-                app.$(">"),
+                $(">"),
             ),
         () =>
             t.a(
@@ -39,7 +40,7 @@ export default function pagination({ data }) {
                     href: `/?page=${data.totalPages}${paramsString}`,
                     ariaDisabled: data.page === data.totalPages,
                 },
-                app.$(">>"),
+                $(">>"),
             ),
     ]);
 }

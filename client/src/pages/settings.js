@@ -1,7 +1,9 @@
 import { t } from "shablon";
-import { initI18n } from "../i18n";
+import { initI18n } from "../utils/i18n";
 import layout from "../components/layout";
 import field from "../components/field";
+import { $ } from "../utils/i18n"
+import toasts from "../components/toast"
 
 export default function settings() {
     async function onSubmit(e) {
@@ -12,36 +14,36 @@ export default function settings() {
                 language,
             });
             initI18n();
-            app.toasts.info(app.$("Settings successfully updated!"));
+            toasts.info($("Settings successfully updated!"));
             app.replaceChildren(settings());
         } catch (err) {
             const message = err.message;
-            app.toasts.error(app.$(message));
+            toasts.error($(message));
         }
     }
 
     const languageOptions = [
         {
             value: "en",
-            label: app.$("English"),
+            label: $("English"),
         },
         {
             value: "es",
-            label: app.$("Spanish"),
+            label: $("Spanish"),
         },
     ];
 
     function onLogout() {
         app.pb.authStore.clear();
-        app.navigate("/login");
+        navigate("/login");
     }
 
     const form = t.form(
         { onsubmit: onSubmit },
         field(
             {
-                label: app.$("Language"),
-                placeholder: app.$("Language"),
+                label: $("Language"),
+                placeholder: $("Language"),
                 required: true,
                 options: languageOptions.map((option) => ({
                     value: option.value,
@@ -51,15 +53,15 @@ export default function settings() {
             },
             t.select,
         ),
-        t.button({ type: "submit", className: "btn" }, app.$("Save")),
+        t.button({ type: "submit", className: "btn" }, $("Save")),
     );
     return layout(
         t.h1(
             {},
-            app.$("Settings"),
+            $("Settings"),
             form,
             t.div({}, [
-                t.button({ className: "btn", onclick: onLogout }, app.$("Logout")),
+                t.button({ className: "btn", onclick: onLogout }, $("Logout")),
             ]),
         ),
     );

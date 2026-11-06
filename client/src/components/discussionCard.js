@@ -1,5 +1,6 @@
 import { t } from "shablon";
 import recordMeta from "./recordMeta";
+import markdown from "./markdown";
 
 export default function discussionCard(discussion) {
     return t.a(
@@ -13,6 +14,6 @@ export default function discussionCard(discussion) {
             updated: discussion.updated,
             created: discussion.created,
         }),
-        t.p({}, discussion.content),
+        markdown(discussion.content),
     );
 }

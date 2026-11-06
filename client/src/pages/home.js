@@ -5,12 +5,16 @@ import slugify from "../utils/slugify";
 import randomString from "../utils/randomString";
 import loader from "../components/loader";
 import pagination from "../components/pagination";
-import field from "../components/field";
+import { $ } from "../utils/i18n"
 import discussionCard from "../components/discussionCard";
 import { getDiscussions } from "../services/data";
+import sort from "../components/sort";
+import toasts from "../components/toast"
+import modals from "../components/modal"
+import { navigateQueryParam } from "../utils/navigation";
 
 // keep this in the global scope to prevent redefinitions inside the page's function
-const cacheKeys = []
+const cacheKeys = [];
 
 export default function home() {
     const searchParams = new URLSearchParams(location.search);
@@ -34,11 +38,11 @@ export default function home() {
                 slug: `${slugify(title)}-${randomString()}`,
                 user: app.pb.authStore.record.id,
             });
-            app.toasts.info(app.$("Discussion created!"));
-            app.modals.close(modal);
-            cacheKeys.forEach(app.cache.flush)
+            toasts.info($("Discussion created!"));
+            modals.close(modal);
+            cacheKeys.forEach(app.cache.flush);
             // cleanup filters to let user see their post on the first position
-            app.navigateQueryParam([
+            navigateQueryParam([
                 {
                     name: "sort",
                     value: "-updated",
@@ -55,7 +59,7 @@ export default function home() {
             e.target.reset();
         } catch (err) {
             console.log(err);
-            app.toasts.error(app.$("Something went wrong saving the discussion"));
+            toasts.error($("Something went wrong saving the discussion"));
         }
     }
 
@@ -66,7 +70,7 @@ export default function home() {
     async function onSortChange(e) {
         data.sort = e.target.value;
         await getDiscussions();
-        app.navigateQueryParam([
+        navigateQueryParam([
             {
                 name: "sort",
                 value: data.sort,
@@ -82,7 +86,7 @@ export default function home() {
             return;
         }
         data.search = e.target.elements[0].value?.trim() || "";
-        app.navigateQueryParam([
+        navigateQueryParam([
             {
                 name: "search",
                 value: data.search,
@@ -101,7 +105,7 @@ export default function home() {
     async function onSearchInput(e) {
         if (e.target.value === "" && data.search !== "") {
             data.search = "";
-            app.navigateQueryParam([
+            navigateQueryParam([
                 {
                     name: "search",
                     value: "",
@@ -124,22 +128,22 @@ export default function home() {
                 className: "flex justify-between",
                 onmount: async () => {
                     const cacheKey = await getDiscussions({ data });
-                    cacheKeys.push(cacheKey)
+                    cacheKeys.push(cacheKey);
                 },
             },
             [
                 t.h1({ className: "flex gap-md" }, () => [
-                    t.span({}, app.$("Discussions")),
+                    t.span({}, $("Discussions")),
                     data.totalItems ? t.span({}, `(${data.totalItems})`) : null,
                 ]),
                 t.button(
                     {
                         className: "btn",
                         onclick: () => {
-                            app.modals.open(modal);
+                            modals.open(modal);
                         },
                     },
-                    app.$("Create discussion"),
+                    $("Create discussion"),
                 ),
             ],
         ),
@@ -148,38 +152,20 @@ export default function home() {
             t.form({ role: "search", className: "flex gap-md", onsubmit: onSearch }, [
                 t.div({ className: "field field-row" }, [
                     t.input({
-                        placeholder: app.$("Search"),
+                        placeholder: $("Search"),
                         type: "search",
                         value: data.search,
                         oninput: onSearchInput,
                         name: "search",
                         id: "search",
                     }),
-                    t.button({ type: "submit", className: "btn" }, app.$("Search")),
+                    t.button({ type: "submit", className: "btn" }, $("Search")),
                 ]),
             ]),
-            field(
-                {
-                    id: "sort",
-                    className: "field-row",
-                    label: app.$("Sort"),
-                    placeholder: app.$("Sort"),
-                    onchange: onSortChange,
-                    options: [
-                        {
-                            label: app.$("Latetst"),
-                            value: "-updated",
-                            selected: data.sort === "-updated",
-                        },
-                        {
-                            label: app.$("Oldest"),
-                            value: "updated",
-                            selected: data.sort === "updated",
-                        },
-                    ],
-                },
-                t.select,
-            ),
+            sort({
+                onSortChange,
+                data,
+            }),
         ]),
         t.div({ className: "flex flex-col gap-md", rid: data.discussions }, () => {
             if (data.loading) {
@@ -187,11 +173,14 @@ export default function home() {
             }
             if (data.discussions.length === 0) {
                 if (data.search) {
-                    return t.span({}, app.$("No results found for '%%'", data.search));
+                    return t.span({}, $("No results found for '%%'", data.search));
                 }
-                return t.span({}, app.$("Create your first discussion"));
+                return t.span({}, $("Create your first discussion"));
             }
-            return t.div({}, [data.discussions.map(discussionCard), pagination({ data })]);
+            return t.div({}, [
+                data.discussions.map(discussionCard),
+                pagination({ data }),
+            ]);
         }),
     );
 }

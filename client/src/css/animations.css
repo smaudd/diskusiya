@@ -8,3 +8,14 @@
         transform: translateY(0);
     }
 }
+
+@keyframes fadein {
+    from {
+        color: var(--surface-color);
+        background-color: var(--surface-color);
+    }
+    to {
+        color: var(--text-color);
+        background-color: transparent;
+    }
+}

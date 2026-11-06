@@ -1,4 +1,5 @@
 import { t } from "shablon";
+import { $ } from "../utils/i18n"
 
 export default function recordMeta({ author, created, updated }) {
     // TODO: include avatar when its implemented
@@ -7,10 +8,9 @@ export default function recordMeta({ author, created, updated }) {
     if (d.getTime() < dUpdate.getTime()) {
         d = new Date(updated)
     }
-    return t.div({ className: "flex gap-md" }, [
-        t.span({}, () => author),
-        t.span({}, "@"),
+    return t.div({ className: "record-meta" }, [
+        t.span({ className: "bold" }, () => author),
         t.span({}, () => `${d.toLocaleDateString()} - ${d.toLocaleTimeString()}`),
-        created != updated ? t.span({ className: "bold" }, `(${app.$("edited")})`) : null,
+        created != updated ? t.span({ className: "bold" }, `(${$("edited")})`) : null,
     ]);
 }

@@ -1,6 +1,7 @@
 import { t } from "shablon";
+import { $ } from "../utils/i18n"
 /*
-  Toast module contract is based of https://ganigeorgiev.com/pocketbase/pocketbase/files/ui/src/base/toast.js
+  Taken from https://ganigeorgiev.com/pocketbase/pocketbase/files/ui/src/base/toast.js
 
   There's little changes like the usage of transitionend to remove the toast element after the animation is done and deprecation for icons
 */
@@ -43,7 +44,7 @@ function removeToast(toastRef, animate = true) {
  */
 function removeAllToasts(animate = true) {
     toasts.forEach((_, key) => {
-        window.app.toasts.remove(key, animate);
+        window.toasts.remove(key, animate);
     });
 }
 
@@ -144,7 +145,7 @@ function addToast(textOrElem, options = {}) {
                     {
                         type: "button",
                         className: "toast-remove btn",
-                        title: app.$("Clear"),
+                        title: $("Clear"),
                         onclick: () => removeToast(toastRef),
                     },
                     "x",
@@ -157,12 +158,10 @@ function addToast(textOrElem, options = {}) {
     toastsContainer.prepend(newToast);
 }
 
-// -------------------------------------------------------------------
-
-window.app = window.app || {};
-window.app.toasts = window.app.toasts || {};
-window.app.toasts.info = infoToast;
-window.app.toasts.error = errorToast;
-window.app.toasts.success = successToast;
-window.app.toasts.remove = removeToast;
-window.app.toasts.removeAll = removeAllToasts;
+export default {
+    info: infoToast,
+    error: errorToast,
+    success: successToast,
+    remove: removeToast,
+    removeAll: removeAllToasts
+}

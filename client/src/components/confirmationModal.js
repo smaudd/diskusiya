@@ -1,4 +1,5 @@
 import { t, store } from "shablon";
+import { $ } from "../utils/i18n"
 
 export default function confirmationModal({ onConfirm }) {
     const data = store({
@@ -9,8 +10,8 @@ export default function confirmationModal({ onConfirm }) {
             className: "modal",
         },
         [
-            t.header({ className: "modal-header" }, app.$("Confirm")),
-            t.div({ className: "modal-content" }, t.span({}, app.$("Are you sure?"))),
+            t.header({ className: "modal-header" }, $("Confirm")),
+            t.div({ className: "modal-content" }, t.span({}, $("Are you sure?"))),
             t.footer({ className: "modal-footer" }, [
                 t.button(
                     // TODO: Not sure how this usage works here but it does
@@ -18,7 +19,7 @@ export default function confirmationModal({ onConfirm }) {
                         className: "btn borderless",
                         onclick: () => app.modals.close(this),
                     },
-                    app.$("Cancel"),
+                    $("Cancel"),
                 ),
                 t.button(
                     {
@@ -29,7 +30,7 @@ export default function confirmationModal({ onConfirm }) {
                             data.loading = false;
                         },
                     },
-                    () => (data.loading ? app.$("Loading...") : app.$("Ok")),
+                    () => (data.loading ? $("Loading...") : $("Ok")),
                 ),
             ]),
         ],

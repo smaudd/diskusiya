@@ -1,4 +1,5 @@
 import { t } from "shablon";
+import { $ } from "../utils/i18n"
 
 export default function field(
     props,
@@ -10,7 +11,7 @@ export default function field(
     delete props.options
     return t.div(
         { className: `field${className ? ` ${className}` : ""}` },
-        t.label({ "html-for": props.id }, app.$(props.label)),
+        t.label({ "html-for": props.id }, $(props.label)),
         fieldElement(
             props,
             options.length

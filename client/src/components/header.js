@@ -1,4 +1,5 @@
 import { t, store } from "shablon";
+import { $ } from "../utils/i18n"
 
 export default function header(title) {
     const data = store({
@@ -6,13 +7,13 @@ export default function header(title) {
     });
 
     const headerLinks = [
-        () => !data.authStore.isValid && t.a({ href: "/login" }, app.$("Login")),
-        () => !data.authStore.isValid && t.a({ href: "/register" }, app.$("Register")),
-        () => data.authStore.isValid && t.a({ href: "/settings" }, app.$("Settings")),
+        () => !data.authStore.isValid && t.a({ href: "/login" }, $("Login")),
+        () => !data.authStore.isValid && t.a({ href: "/register" }, $("Register")),
+        () => data.authStore.isValid && t.a({ href: "/settings" }, $("Settings")),
     ].filter((link) => link());
     return t.header(
         {},
-        t.nav({}, t.a({ href: "/" }, "Home"), headerLinks),
+        t.nav({}, t.a({ href: "/" }, $("Home")), headerLinks),
         t.h1({}, title),
     );
 }

@@ -1,4 +1,5 @@
 import { t, store } from "shablon";
+import { $ } from "../utils/i18n"
 import layout from "../components/layout";
 import recordMeta from "../components/recordMeta";
 import loader from "../components/loader";
@@ -8,21 +9,23 @@ import logger from "../services/logger";
 import slugify from "../utils/slugify";
 import randomString from "../utils/randomString";
 import confirmationModal from "../components/confirmationModal";
+import replyList from "../components/replyList";
+import markdown from "../components/markdown";
+import { navigate } from "../utils/navigation";
+import toasts from "../components/toast"
+import modals from "../components/modal"
 
 export default function discussion(route) {
+    const searchParams = new URLSearchParams(location.search);
+    let updateModal = null;
+    let deleteModal = null;
     const data = store({
         discussion: null,
+        replies: [],
         loading: false,
         notfound: false,
         isOwner: false,
-        modal: discussionModal({
-            title: app.$("Update discussion"),
-            onSubmitDiscussion,
-            values: {
-                title: "",
-                content: "",
-            },
-        }),
+        sort: searchParams.get("sort") || "-updated",
     });
 
     async function getDiscussion() {
@@ -36,14 +39,7 @@ export default function discussion(route) {
                 .getFirstListItem(filter, {
                     expand: "user",
                 });
-            data.modal = discussionModal({
-                title: app.$("Update discussion"),
-                onSubmitDiscussion,
-                values: {
-                    title: data.discussion.title,
-                    content: data.discussion.content,
-                },
-            });
+
             if (data.discussion.expand.user.id === app.pb.authStore.record.id) {
                 data.isOwner = true;
             }
@@ -53,7 +49,7 @@ export default function discussion(route) {
                 data.loading = false;
                 return;
             }
-            app.toasts.error(app.$("Something went wrong getting this discussion"));
+            toasts.error($("Something went wrong getting this discussion"));
         } finally {
             data.loading = false;
         }
@@ -82,14 +78,14 @@ export default function discussion(route) {
                 .update(data.discussion.id, updates);
             data.discussion = item;
             if (shouldRedirect) {
-                app.navigate(`/d/${item.slug}`);
+                navigate(`/d/${item.slug}`);
             }
-            app.toasts.info(app.$("Discussion updated successfully"));
+            toasts.info($("Discussion updated successfully"));
         } catch (err) {
             logger(err, "error");
-            app.toasts.error(app.$("Something went wrong updating the discussion"));
+            toasts.error($("Something went wrong updating the discussion"));
         } finally {
-            app.modals.close(data.modal);
+            modals.close(data.editModal);
             app.cache.flushAll();
         }
     }
@@ -101,18 +97,14 @@ export default function discussion(route) {
         }
         try {
             await app.pb.collection("discussions").delete(data.discussion.id);
-            app.navigate(`/`);
+            navigate(`/`);
             app.cache.flushAll();
         } catch (err) {
-            app.toasts.error(app.$("Something went wrong deleting this discussion"));
+            toasts.error($("Something went wrong deleting this discussion"));
         } finally {
-            app.toasts.info(app.$("Discussion deleted successfully"));
+            toasts.info($("Discussion deleted successfully"));
         }
     }
-
-    const confirm = confirmationModal({
-        onConfirm: onDeleteDiscussion,
-    });
 
     return layout(
         t.div(
@@ -120,10 +112,26 @@ export default function discussion(route) {
                 onmount: () => {
                     getDiscussion();
                 },
+                rid: data.discussion?.id,
+                className: "flex flex-col gap-xl",
             },
             [
-                () => confirm,
-                () => data.modal,
+                () => {
+                    if (data.discussion?.id && data.isOwner) {
+                        updateModal = discussionModal({
+                            title: $("Update discussion"),
+                            onSubmitDiscussion,
+                            values: {
+                                title: data.discussion.title,
+                                content: data.discussion.content,
+                            },
+                        });
+                        deleteModal = confirmationModal({
+                            onConfirm: onDeleteDiscussion,
+                        });
+                        return [updateModal, deleteModal];
+                    }
+                },
                 () => {
                     if (data.loading) {
                         return loader();
@@ -138,32 +146,40 @@ export default function discussion(route) {
                             created: data.discussion?.created,
                         }),
                         t.h1({}, () => data?.discussion?.title),
-                        t.p({}, () => data?.discussion?.content),
+                        markdown(data?.discussion?.content),
                     ];
                 },
-                () =>
-                    data.isOwner
-                        ? t.div({ className: "flex gap-md" }, [
-                              t.button(
-                                  {
-                                      className: "btn",
-                                      onclick: () => {
-                                          app.modals.open(data.modal);
-                                      },
-                                  },
-                                  app.$("Edit"),
-                              ),
-                              t.button(
-                                  {
-                                      className: "btn",
-                                      onclick: () => {
-                                          app.modals.open(confirm);
-                                      },
-                                  },
-                                  app.$("Delete"),
-                              ),
-                          ])
-                        : null,
+                t.div({ className: "flex gap-md" }, [
+                    () => {
+                        if (data.isOwner) {
+                            return [
+                                t.button(
+                                    {
+                                        className: "btn",
+                                        onclick: () => {
+                                            modals.open(updateModal);
+                                        },
+                                    },
+                                    $("Edit"),
+                                ),
+                                t.button(
+                                    {
+                                        className: "btn",
+                                        onclick: () => {
+                                            modals.open(deleteModal);
+                                        },
+                                    },
+                                    $("Delete"),
+                                ),
+                            ];
+                        }
+                    },
+                ]),
+                () => {
+                    if (data.discussion?.id) {
+                        return replyList({ data });
+                    }
+                },
             ],
         ),
     );
