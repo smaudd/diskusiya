@@ -3,7 +3,7 @@ import { $ } from "../utils/i18n"
 
 export default function replyActions({ isOwner, onReply, onEdit, onDelete }) {
     let actions = [];
-    if (app.pb.authStore.isValid) {
+    if (app.pb.authStore.isValid && onReply) {
         actions.push([
             t.button(
                 {

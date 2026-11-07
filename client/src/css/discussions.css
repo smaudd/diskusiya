@@ -11,7 +11,12 @@
 }
 
 .reply-form {
+    padding: var(--md);
     margin-top: var(--md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--md);
+    border: 2px solid var(--surface-color);
 }
 
 .record-meta {
