@@ -1,6 +1,7 @@
 import { t, store } from "shablon";
 import { $ } from "../utils/i18n"
 import field from "./field";
+import modals from "../components/modal"
 
 export default function discussionModal({
     title = $("Create discussion"),
@@ -57,7 +58,7 @@ export default function discussionModal({
         t.footer({ className: "modal-footer" }, [
             t.button(
                 // TODO: Not sure how this usage works here but it does
-                { className: "btn borderless", onclick: () => app.modals.close(this) },
+                { className: "btn borderless", onclick: () => modals.close(this) },
                 $("Cancel"),
             ),
             t.button({ className: "btn", "html-form": "discussion-form" }, () =>

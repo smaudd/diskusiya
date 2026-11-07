@@ -1,5 +1,5 @@
 import { t, store } from "shablon";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 import layout from "../components/layout";
 import recordMeta from "../components/recordMeta";
 import loader from "../components/loader";
@@ -12,8 +12,8 @@ import confirmationModal from "../components/confirmationModal";
 import replyList from "../components/replyList";
 import markdown from "../components/markdown";
 import { navigate } from "../utils/navigation";
-import toasts from "../components/toast"
-import modals from "../components/modal"
+import toasts from "../components/toast";
+import modals from "../components/modal";
 
 export default function discussion(route) {
     const searchParams = new URLSearchParams(location.search);
@@ -140,41 +140,43 @@ export default function discussion(route) {
                         return notfound();
                     }
                     return [
+                        t.div({ className: "flex gap-md justify-between" }, [
+                            t.h1({}, () => data?.discussion?.title),
+                            t.div({ className: "flex gap-md" }, [
+                                () => {
+                                    if (data.isOwner) {
+                                        return [
+                                            t.button(
+                                                {
+                                                    className: "btn",
+                                                    onclick: () => {
+                                                        modals.open(updateModal);
+                                                    },
+                                                },
+                                                $("Edit"),
+                                            ),
+                                            t.button(
+                                                {
+                                                    className: "btn",
+                                                    onclick: () => {
+                                                        modals.open(deleteModal);
+                                                    },
+                                                },
+                                                $("Delete"),
+                                            ),
+                                        ];
+                                    }
+                                },
+                            ]),
+                        ]),
+                        markdown(data?.discussion?.content),
                         recordMeta({
                             author: data.discussion?.expand?.user?.name,
                             updated: data.discussion?.updated,
                             created: data.discussion?.created,
                         }),
-                        t.h1({}, () => data?.discussion?.title),
-                        markdown(data?.discussion?.content),
                     ];
                 },
-                t.div({ className: "flex gap-md" }, [
-                    () => {
-                        if (data.isOwner) {
-                            return [
-                                t.button(
-                                    {
-                                        className: "btn",
-                                        onclick: () => {
-                                            modals.open(updateModal);
-                                        },
-                                    },
-                                    $("Edit"),
-                                ),
-                                t.button(
-                                    {
-                                        className: "btn",
-                                        onclick: () => {
-                                            modals.open(deleteModal);
-                                        },
-                                    },
-                                    $("Delete"),
-                                ),
-                            ];
-                        }
-                    },
-                ]),
                 () => {
                     if (data.discussion?.id) {
                         return replyList({ data });

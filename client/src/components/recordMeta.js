@@ -10,7 +10,9 @@ export default function recordMeta({ author, created, updated }) {
     }
     return t.div({ className: "record-meta" }, [
         t.span({ className: "bold" }, () => author),
-        t.span({}, () => `${d.toLocaleDateString()} - ${d.toLocaleTimeString()}`),
-        created != updated ? t.span({ className: "bold" }, `(${$("edited")})`) : null,
+        t.div({ className: "flex gap-md"}, [
+            created != updated ? t.span({ className: "bold" }, `(${$("edited")})`) : null,
+            t.span({}, () => `${d.toLocaleDateString()} - ${d.toLocaleTimeString()}`),
+        ])
     ]);
 }

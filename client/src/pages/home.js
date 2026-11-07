@@ -69,7 +69,7 @@ export default function home() {
 
     async function onSortChange(e) {
         data.sort = e.target.value;
-        await getDiscussions();
+        await getDiscussions({ data });
         navigateQueryParam([
             {
                 name: "sort",
