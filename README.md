@@ -17,6 +17,9 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Client cache for discussion listings (this is wacky at best but seems to work)
 - Discussion listings use URLs with slugs
 - Discussion edition and deletion (if title is updated slug will be too)
+- Reply creation inside discussion
+- One reply nesting depth
+- Reply editions and deletions inside discussion
 
 ### TODO
 
