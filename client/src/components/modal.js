@@ -100,7 +100,7 @@ async function open(el) {
     initModal(el);
 
     // force close on history change
-    el._forceClose = () => app.modals.close(el, true);
+    el._forceClose = () => close(el, true);
     window.addEventListener("popstate", el._forceClose);
 
     const largestZIndex = Math.max(findLargestZIndexModal(el)?.style.zIndex << 0, 1000);
@@ -115,12 +115,12 @@ async function open(el) {
  *
  * Example:
  * ```js
- * app.modals.close()
- * app.modals.close(myModal)
+ * close()
+ * close(myModal)
  *
  * // force close
- * app.modals.close(null, true)
- * app.modals.close(myModal, true)
+ * close(null, true)
+ * close(myModal, true)
  * ```
  *
  * @param {Element} [el]
@@ -202,7 +202,7 @@ function initModal(el) {
             return;
         }
 
-        window.app.modals.close(el);
+        close(el);
     });
 
     let startedInside = false;
@@ -230,7 +230,7 @@ function initModal(el) {
             return;
         }
 
-        window.app.modals.close(el);
+        close(el);
     });
 }
 
