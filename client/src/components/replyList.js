@@ -13,6 +13,7 @@ import confirmationModal from "./confirmationModal";
 
 
 // TODO: Chunck this file into smaller modules
+// TODO: Add pagination to replies
 export default function replyList({ data }) {
     let deleteModal = null;
     const searchParams = new URLSearchParams(location.search);
