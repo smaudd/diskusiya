@@ -6,7 +6,7 @@ import replyForm from "./replyForm";
 import markdown from "./markdown";
 import { navigate } from "../utils/navigation";
 import { $ } from "../utils/i18n";
-import modals from "../components/modal";
+import modals from "./modal";
 import confirmationModal from "./confirmationModal";
 import {
     createOrUpdateReply,
@@ -85,11 +85,38 @@ export default function replyList({ discussionId }) {
             });
         },
     );
+
+    function replyBlock({ reply, className }, children) {
+        return t.div(
+            {
+                className: className,
+                id: `reply-${reply.id}`,
+            },
+            [
+                reply.deleted
+                    ? t.span(
+                          {
+                              className: "text-xs font-italic",
+                          },
+                          $("deleted"),
+                      )
+                    : recordMeta({
+                          author: reply?.expand?.user,
+                          updated: reply?.updated,
+                          created: reply?.created,
+                      }),
+                markdown(reply.content),
+            ],
+            children,
+        );
+    }
+
     return t.div(
         {
             onmount: async () => {
                 data.replies = await getReplies({ data });
             },
+            rid: discussionId
         },
         sort({
             data,
@@ -111,7 +138,6 @@ export default function replyList({ discussionId }) {
             return t.div(
                 {
                     className: "flex flex-col gap-md mt-md",
-                    rid: JSON.stringify(data.replies),
                 },
                 data?.replies?.map((reply) =>
                     t.div(
@@ -120,37 +146,17 @@ export default function replyList({ discussionId }) {
                             rid: JSON.stringify(reply),
                         },
                         [
-                            () =>
-                                t.div(
-                                    {
-                                        className: "reply",
-                                        id: `reply-${reply.id}`,
-                                    },
-                                    [
-                                        recordMeta({
-                                            author: reply?.expand?.user,
-                                            updated: reply?.updated,
-                                            created: reply?.created,
-                                        }),
-                                        markdown(reply.content),
-                                    ],
-                                ),
+                            () => replyBlock({ reply, className: "reply" }),
                             () =>
                                 reply?.expand?.replies_via_replyingTo?.map((subReply) =>
                                     t.div(
-                                        {
-                                            id: `reply-${subReply.id}`,
-                                            className: "subreply",
-                                            rid: JSON.stringify(subReply),
-                                        },
-                                        [
-                                            recordMeta({
-                                                author: subReply?.expand?.user,
-                                                updated: subReply?.updated,
-                                                created: subReply?.created,
-                                            }),
-                                            markdown(subReply.content),
-                                            () =>
+                                        {},
+                                        replyBlock(
+                                            {
+                                                reply: subReply,
+                                                className: "reply subreply",
+                                            },
+                                            [
                                                 replyActions({
                                                     isOwner:
                                                         pb?.authStore?.record?.id ===
@@ -165,7 +171,6 @@ export default function replyList({ discussionId }) {
                                                         modals.open(deleteModal);
                                                     },
                                                 }),
-                                            () =>
                                                 replyForm({
                                                     id: "subreply-form",
                                                     show: data.reply?.id === subReply.id,
@@ -182,7 +187,8 @@ export default function replyList({ discussionId }) {
                                                             : $("Submit"),
                                                     onCancel: onCancelReply,
                                                 }),
-                                        ],
+                                            ],
+                                        ),
                                     ),
                                 ),
                             replyActions({

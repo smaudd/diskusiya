@@ -6,7 +6,7 @@ import loader from "../components/loader";
 import notfound from "../components/notfound";
 import discussionModal from "../components/disussionModal";
 import confirmationModal from "../components/confirmationModal";
-import replyList from "../components/replyList";
+import replyList from "../components/repliesList";
 import markdown from "../components/markdown";
 import modals from "../components/modal";
 import {
@@ -36,7 +36,7 @@ export default function discussion(route) {
                         data.isOwner = true;
                     }
                 },
-                // rid: data.discussion?.id,
+                rid: data.discussion?.slug,
                 className: "flex flex-col gap-xl mt-xl",
             },
             [
