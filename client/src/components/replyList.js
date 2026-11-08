@@ -4,7 +4,7 @@ import sort from "./sort";
 import replyActions from "./replyActions";
 import replyForm from "./replyForm";
 import markdown from "./markdown";
-import { navigateQueryParam } from "../utils/navigation";
+import { navigate } from "../utils/navigation";
 import { $ } from "../utils/i18n";
 import modals from "../components/modal";
 import confirmationModal from "./confirmationModal";
@@ -14,6 +14,7 @@ import {
     getReplies,
 } from "../services/collections/replies";
 import { pb } from "../pb";
+import toast from "./toast";
 
 // TODO: Add pagination to replies
 export default function replyList({ discussionId }) {
@@ -46,6 +47,11 @@ export default function replyList({ discussionId }) {
         data.mode = null;
     }
     async function onSubmitReply(e) {
+        if (!pb.authStore?.isValid) {
+            toast.info("Login to be part of the conversation");
+            navigate("/login");
+            return;
+        }
         const { replies, id } = await createOrUpdateReply({
             data,
             event: e,
@@ -142,7 +148,7 @@ export default function replyList({ discussionId }) {
                                             () =>
                                                 replyActions({
                                                     isOwner:
-                                                        pb.authStore.record.id ===
+                                                        pb?.authStore?.record?.id ===
                                                         subReply.user,
                                                     onEdit: onReplyCreateOrUpdate(
                                                         "update",
@@ -176,7 +182,7 @@ export default function replyList({ discussionId }) {
                                     ),
                                 ),
                             replyActions({
-                                isOwner: pb.authStore.record.id === reply.user,
+                                isOwner: pb.authStore?.record?.id === reply.user,
                                 onReply: onReplyCreateOrUpdate("create", reply),
                                 onEdit: onReplyCreateOrUpdate("update", reply),
                                 onDelete: () => {
@@ -210,7 +216,7 @@ export default function replyList({ discussionId }) {
         },
         () => {
             if (!data.loading) {
-                replyForm({
+                return replyForm({
                     id: "reply-form",
                     show: true,
                     onSubmitReply,

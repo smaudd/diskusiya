@@ -7,8 +7,10 @@ import { $ } from "../utils/i18n";
 import discussionCard from "../components/discussionCard";
 import sort from "../components/sort";
 import modals from "../components/modal";
-import { navigateQueryParam } from "../utils/navigation";
+import { navigate, navigateQueryParam } from "../utils/navigation";
 import { createDiscussion, getDiscussions } from "../services/collections/discussions";
+import toast from "../components/toast";
+import { pb } from "../pb";
 
 export default function home() {
     const searchParams = new URLSearchParams(location.search);
@@ -104,6 +106,11 @@ export default function home() {
                     {
                         className: "btn",
                         onclick: () => {
+                            if (!pb.authStore.isValid) {
+                                toast.info("Login to be part of the conversation");
+                                navigate("/login");
+                                return;
+                            }
                             modals.open(modal);
                         },
                     },

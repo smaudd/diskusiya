@@ -32,7 +32,7 @@ export default function discussion(route) {
             {
                 onmount: async () => {
                     data.discussion = await getDiscussion({ data, route });
-                    if (data?.discussion?.expand.user.id === pb.authStore.record.id) {
+                    if (data?.discussion?.expand.user.id === pb?.authStore?.record?.id) {
                         data.isOwner = true;
                     }
                 },

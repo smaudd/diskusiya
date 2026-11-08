@@ -102,7 +102,7 @@ export async function createDiscussion({ event }) {
                 title,
                 content,
                 slug: `${slugify(title)}-${randomString()}`,
-                user: pb.authStore.record.id,
+                user: pb.authStore?.record?.id,
             },
             {
                 fields: "slug",

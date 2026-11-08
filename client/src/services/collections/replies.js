@@ -100,7 +100,7 @@ export async function createOrUpdateReply({ data, event }) {
         const newReply = await pb.collection(collections.replies).create(
             {
                 content,
-                user: pb.authStore.record.id,
+                user: pb.authStore?.record?.id,
                 discussion: data.discussionId,
                 replyingTo,
             },

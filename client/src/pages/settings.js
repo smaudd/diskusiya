@@ -12,7 +12,7 @@ export default function settings() {
         e.preventDefault();
         const [{ value: language }] = e.target.elements;
         try {
-            await pb.collection("users").update(pb.authStore.record.id, {
+            await pb.collection("users").update(pb.authStore?.record?.id, {
                 language,
             });
             initI18n();

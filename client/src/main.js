@@ -21,7 +21,7 @@ const routes = {
         app.replaceChildren(home());
     },
     "/d/{slug}": (route) => {
-        pb.authStore.isValid ? app.replaceChildren(discussion(route)) : navigate("/");
+        app.replaceChildren(discussion(route));
     },
     "/login": () => {
         pb.authStore.isValid ? navigate("/") : app.replaceChildren(login());
