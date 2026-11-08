@@ -36,7 +36,6 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Take a look at security
 - Improve the cache system
 - Include Pocketbase binary with the project? Not sure how to handle this yet
-- 
 
 ### Caveats
 
