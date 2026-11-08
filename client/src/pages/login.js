@@ -1,8 +1,10 @@
 import { t } from "shablon";
 import layout from "../components/layout";
-import { $ } from "../utils/i18n"
-import toasts from "../components/toast"
+import { $ } from "../utils/i18n";
+import toasts from "../components/toast";
 import { pb } from "../pb";
+import field from "../components/field";
+import { navigate } from "../utils/navigation";
 
 export default function login() {
     async function onSubmit(e) {
@@ -21,10 +23,27 @@ export default function login() {
     }
 
     const form = t.form(
-        { onsubmit: onSubmit },
-        t.input({ placeholder: $("Username"), required: true }),
-        t.input({ placeholder: $("Password"), type: "password", required: true }),
-        t.button({ type: "submit" }, $("Submit")),
+        { className: "flex flex-col gap-md", onsubmit: onSubmit },
+        field(
+            {
+                label: $("Username"),
+                placeholder: $("Enter your username or email"),
+                required: true,
+                "html-autocomplete": "username",
+            },
+            t.input,
+        ),
+        field(
+            {
+                label: $("Password"),
+                placeholder: $("Enter your password"),
+                required: true,
+                type: "password",
+                "html-autocomplete": "password",
+            },
+            t.input,
+        ),
+        t.button({ className: "btn", type: "submit" }, $("Submit")),
     );
     return layout(t.h1({}, $("Login"), form));
 }

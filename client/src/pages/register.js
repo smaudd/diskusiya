@@ -1,7 +1,8 @@
 import { t } from "shablon";
 import layout from "../components/layout";
-import { $ } from "../utils/i18n"
-import toasts from "../components/toast"
+import { $ } from "../utils/i18n";
+import toasts from "../components/toast";
+import field from "../components/field";
 
 export default function register() {
     async function onSubmit(e) {
@@ -30,15 +31,40 @@ export default function register() {
     }
 
     const form = t.form(
-        { onsubmit: onSubmit },
-        t.input({ placeholder: $("Username"), required: true }),
-        t.input({ placeholder: $("Password"), type: "password", required: true }),
-        t.input({
-            placeholder: $("Repeat password"),
-            type: "password",
-            required: true,
-        }),
-        t.button({ type: "submit" }, $("Submit")),
+        { className: "flex flex-col gap-md", onsubmit: onSubmit },
+        field(
+            {
+                label: $("Username"),
+                placeholder: $("Enter your username or email"),
+                required: true,
+                name: "username",
+                "html-autocomplete": "username",
+            },
+            t.input,
+        ),
+        field(
+            {
+                label: $("Password"),
+                placeholder: $("Enter your password"),
+                required: true,
+                type: "password",
+                name: "password",
+                "html-autocomplete": "new-password",
+            },
+            t.input,
+        ),
+        field(
+            {
+                label: $("Repeat Password"),
+                placeholder: $("Repeat your password"),
+                required: true,
+                type: "password",
+                name: "repeat-password",
+                "html-autocomplete": "new-password",
+            },
+            t.input,
+        ),
+        t.button({ type: "submit", className: "btn" }, $("Submit")),
     );
     return layout(t.h1({}, $("Register"), form));
 }
