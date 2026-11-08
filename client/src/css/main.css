@@ -54,6 +54,8 @@ a[aria-disabled="true"] {
 .page {
     display: grid;
     gap: var(--xl);
+    max-width: var(--max-container-width);
+    margin: 0 auto;
 }
 
 .focus {

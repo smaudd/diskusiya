@@ -7,7 +7,7 @@ export default function layout(...children) {
     const data = store({ language: pb?.authStore?.record?.language || "en" });
     return t.main(
         {
-            className: "app page",
+            className: "page",
             rid: data.language,
         },
         () => header(),

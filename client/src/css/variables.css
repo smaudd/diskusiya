@@ -17,6 +17,8 @@
     --info-color: blue;
     --error-color: red;
 
+    --max-container-width: 768px;
+
     --overlay-color: rgba(0, 0, 0, 0.5);
 
     --border-1: 1px solid var(--secondary-color);
