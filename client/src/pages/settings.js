@@ -60,7 +60,7 @@ export default function settings() {
         } catch (err) {
             console.log(err);
         } finally {
-            flushAll()
+            flushAll();
         }
     }
 
@@ -80,8 +80,8 @@ export default function settings() {
     }
 
     function onCancelAvatar() {
-        data.avatar = pb.authStore.record.avatar
-        data.previewAvatar = false
+        data.avatar = pb.authStore.record.avatar;
+        data.previewAvatar = false;
     }
 
     const languageForm = t.form(
@@ -132,7 +132,11 @@ export default function settings() {
             () =>
                 data.previewAvatar
                     ? t.button(
-                          { type: "button", className: "btn borderless", onclick: onCancelAvatar },
+                          {
+                              type: "button",
+                              className: "btn borderless",
+                              onclick: onCancelAvatar,
+                          },
                           $("Cancel"),
                       )
                     : "",

@@ -20,7 +20,8 @@
         display: flex;
         flex-direction: row;
         gap: var(--md);
-        label, input {
+        label,
+        input {
             padding: var(--md) 0;
         }
     }
