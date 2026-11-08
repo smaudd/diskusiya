@@ -36,11 +36,11 @@ export default function replyList({ discussionId }) {
     }
     function onReplyCreateOrUpdate(mode, reply) {
         return () => {
-            if (mode === data.mode && reply.id === data.reply.id) {
-                data.reply = null
-                data.currentReplyContent = null
-                data.mode = null
-                return
+            if (data.reply && mode === data.mode && reply.id === data.reply.id) {
+                data.reply = null;
+                data.currentReplyContent = null;
+                data.mode = null;
+                return;
             }
             data.reply = reply;
             data.currentReplyContent = mode === "update" ? reply.content : null;
@@ -90,7 +90,6 @@ export default function replyList({ discussionId }) {
             onmount: async () => {
                 data.replies = await getReplies({ data });
             },
-            rid: "never",
         },
         sort({
             data,
@@ -112,13 +111,13 @@ export default function replyList({ discussionId }) {
             return t.div(
                 {
                     className: "flex flex-col gap-md mt-md",
-                    rid: `${data.replies.map((i) => i.content).join(",")}-${data?.replies?.length}`,
+                    rid: JSON.stringify(data.replies),
                 },
-                data?.replies?.map((reply) => {
-                    return t.div(
+                data?.replies?.map((reply) =>
+                    t.div(
                         {
                             className: "reply-block",
-                            rid: `${data.reply?.id}-${reply.id}`,
+                            rid: JSON.stringify(reply),
                         },
                         [
                             () =>
@@ -142,7 +141,7 @@ export default function replyList({ discussionId }) {
                                         {
                                             id: `reply-${subReply.id}`,
                                             className: "subreply",
-                                            rid: `${subReply.content}-${subReply.id}`,
+                                            rid: JSON.stringify(subReply),
                                         },
                                         [
                                             recordMeta({
@@ -189,9 +188,7 @@ export default function replyList({ discussionId }) {
                             replyActions({
                                 isOwner: pb.authStore?.record?.id === reply.user,
                                 onReply: onReplyCreateOrUpdate("create", reply),
-                                onEdit:
-                                    data.reply?.id !== reply.id &&
-                                    onReplyCreateOrUpdate("update", reply),
+                                onEdit: onReplyCreateOrUpdate("update", reply),
                                 onDelete: () => {
                                     data.reply = reply;
                                     data.mode = "delete";
@@ -217,8 +214,8 @@ export default function replyList({ discussionId }) {
                                 });
                             },
                         ],
-                    );
-                }),
+                    ),
+                ),
             );
         },
         () => {

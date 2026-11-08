@@ -58,27 +58,28 @@ export async function deleteReply({ data }) {
 
 async function updateReply({ content, data }) {
     try {
-        const update = await pb.collection("replies").update(data.reply, {
+        const update = await pb.collection("replies").update(data.reply.id, {
             content,
         });
-        toasts.info($("Reply updated successfully"));
         function updateReply(reply) {
-            if (reply.id === data.reply) {
+            if (reply.id === data.reply.id) {
                 reply.content = content;
                 reply.updated = update.updated;
             }
             return reply;
         }
-        data.replies = data.replies.map((reply) => {
+        const replies = data.replies.map((reply) => {
             reply = updateReply(reply);
             // see if we need to update the expanded
             if (reply.expand?.replies_via_replyingTo?.length) {
                 reply.expand.replies_via_replyingTo.map(updateReply);
             }
+
             return reply;
         });
-
-        return data.replies;
+        toasts.info($("Reply updated successfully"));
+        console.log("got replies", JSON.stringify(replies))
+        return replies;
     } catch (err) {
         logger(err, "error");
         toasts.error($("Something went wrong updating your reply"));
