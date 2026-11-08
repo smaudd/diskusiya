@@ -6,6 +6,8 @@
 
 This project uses Pocketbase v0.40.5, Shablon 0.1.0-rc.1 and Vite 8.3.5 with pnpm
 
+markdown-it and DOMPurify are used to allow users enriched content for their discussions and replies
+
 This is primarly an experiment to hone my knowledge in Pocketbase and Shablon 
 
 ### Already done (with needed improvements of course)
