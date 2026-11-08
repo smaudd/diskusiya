@@ -28,6 +28,7 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 ### TODO
 
 - Add pagination to replies
+- Add cache to replies
 - Testing
 - Document with JSDoc
 - Discussion replies
