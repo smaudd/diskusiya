@@ -4,6 +4,7 @@ import field from "./field";
 import modals from "../components/modal";
 
 export default function discussionModal({
+    id = "discussion-form",
     title = $("Create discussion"),
     onSubmitDiscussion,
     values,
@@ -20,7 +21,7 @@ export default function discussionModal({
             { className: "modal-content" },
             t.form(
                 {
-                    id: "discussion-form",
+                    id,
                     onsubmit: async (e) => {
                         data.loading = true;
                         await onSubmitDiscussion(e);
@@ -61,7 +62,7 @@ export default function discussionModal({
                 { className: "btn borderless", onclick: () => modals.close(this) },
                 $("Cancel"),
             ),
-            t.button({ className: "btn", "html-form": "discussion-form" }, () =>
+            t.button({ className: "btn", "html-form": id }, () =>
                 data.loading ? $("Loading...") : $("Save"),
             ),
         ]),

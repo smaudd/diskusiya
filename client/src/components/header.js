@@ -7,12 +7,13 @@ import modals from "../components/modal";
 import { createDiscussion } from "../services/collections/discussions";
 import { navigate } from "../utils/navigation";
 
-export default function header(title) {
+export default function header({ title }) {
     const data = store({
         authStore: pb.authStore,
     });
 
     const createDiscussionModal = discussionModal({
+        id: "header-discussion-modal",
         onSubmitDiscussion: async (e) => {
             await createDiscussion({ event: e });
             modals.close(createDiscussionModal);
