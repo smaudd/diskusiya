@@ -53,3 +53,11 @@
 .mt-md {
     margin-top: var(--md);
 }
+
+.mt-xl {
+    margin-top: var(--xl);
+}
+
+.flex-1 {
+    flex: 1;
+}

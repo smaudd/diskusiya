@@ -37,7 +37,7 @@ export default function discussion(route) {
                     }
                 },
                 // rid: data.discussion?.id,
-                className: "flex flex-col gap-xl",
+                className: "flex flex-col gap-xl mt-xl",
             },
             [
                 () => {
@@ -69,34 +69,8 @@ export default function discussion(route) {
                         return notfound();
                     }
                     return [
-                        t.div({ className: "flex gap-md justify-between" }, [
+                        t.div({ className: "discussions-header" }, [
                             t.h1({}, () => data?.discussion?.title),
-                            t.div({ className: "flex gap-md" }, [
-                                () => {
-                                    if (data.isOwner) {
-                                        return [
-                                            t.button(
-                                                {
-                                                    className: "btn",
-                                                    onclick: () => {
-                                                        modals.open(updateModal);
-                                                    },
-                                                },
-                                                $("Edit"),
-                                            ),
-                                            t.button(
-                                                {
-                                                    className: "btn",
-                                                    onclick: () => {
-                                                        modals.open(deleteModal);
-                                                    },
-                                                },
-                                                $("Delete"),
-                                            ),
-                                        ];
-                                    }
-                                },
-                            ]),
                         ]),
                         markdown(data?.discussion?.content),
                         recordMeta({
@@ -104,6 +78,32 @@ export default function discussion(route) {
                             updated: data.discussion?.updated,
                             created: data.discussion?.created,
                         }),
+                        t.div({ className: "flex gap-md justify-end" }, [
+                            () => {
+                                if (data.isOwner) {
+                                    return [
+                                        t.button(
+                                            {
+                                                className: "btn",
+                                                onclick: () => {
+                                                    modals.open(updateModal);
+                                                },
+                                            },
+                                            $("Edit"),
+                                        ),
+                                        t.button(
+                                            {
+                                                className: "btn",
+                                                onclick: () => {
+                                                    modals.open(deleteModal);
+                                                },
+                                            },
+                                            $("Delete"),
+                                        ),
+                                    ];
+                                }
+                            },
+                        ]),
                     ];
                 },
                 () => {

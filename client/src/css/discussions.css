@@ -32,3 +32,42 @@
         border-radius: 100%;
     }
 }
+
+.discussions-header {
+    display: flex;
+    gap: var(--md);
+    flex-direction: column;
+    h1 {
+        display: flex;
+        gap: var(--md);
+        width: 100%;
+    }
+    button {
+        white-space: nowrap;
+    }
+}
+
+.discussions-filters {
+    display: flex;
+    gap: var(--md);
+    justify-content: space-between;
+}
+
+.discussions-search-md {
+    display: none;
+}
+
+/* Tablet and up */
+@media screen and (min-width: 768px) {
+    .discussions-header {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .discussions-search-md {
+        display: block;
+    }
+    .discussions-search {
+        display: none;
+    }
+}

@@ -9,8 +9,7 @@ import sort from "../components/sort";
 import modals from "../components/modal";
 import { navigate, navigateQueryParam } from "../utils/navigation";
 import { createDiscussion, getDiscussions } from "../services/collections/discussions";
-import toast from "../components/toast";
-import { pb } from "../pb";
+import searchModalMobile from "../components/searchModalMobile";
 
 export default function home() {
     const searchParams = new URLSearchParams(location.search);
@@ -24,17 +23,32 @@ export default function home() {
         totalPages: null,
     });
 
-    const modal = discussionModal({
-        onSubmitDiscussion: async (e) => {
-            await createDiscussion({ event: e });
-            modals.close(modal);
-        },
+    const searchDiscussionModal = searchModalMobile({
+        search: data.search,
     });
 
     async function onSortChange(e) {
         data.sort = e.target.value;
         await getDiscussions({ data });
         navigateQueryParam([
+            {
+                name: "sort",
+                value: data.sort,
+            },
+        ]);
+    }
+
+    function onClearSearch() {
+        data.search = "";
+        navigateQueryParam([
+            {
+                name: "search",
+                value: data.search,
+            },
+            {
+                name: "page",
+                value: 1,
+            },
             {
                 name: "sort",
                 value: data.sort,
@@ -86,10 +100,22 @@ export default function home() {
         }
     }
 
+    function clearFiltersBlock({ title }) {
+        return t.div({ className: "flex gap-md items-center" }, [
+            t.span({ className: "flex-1" }, title),
+            t.button(
+                {
+                    className: "btn borderless",
+                    onclick: onClearSearch,
+                },
+                $("Clear filters"),
+            ),
+        ]);
+    }
+
     return layout(
         t.div(
             {
-                className: "flex justify-between",
                 onmount: async () => {
                     const res = await getDiscussions({ data });
                     data.totalPages = res.totalPages;
@@ -97,46 +123,48 @@ export default function home() {
                     data.totalItems = res.totalItems;
                 },
             },
-            [
-                t.h1({ className: "flex gap-md" }, () => [
+            t.div({ className: "discussions-header" }, [
+                t.h1({}, () => [
                     t.span({}, $("Discussions")),
                     data.totalItems ? t.span({}, `(${data.totalItems})`) : null,
                 ]),
-                t.button(
-                    {
-                        className: "btn",
-                        onclick: () => {
-                            if (!pb.authStore.isValid) {
-                                toast.info("Login to be part of the conversation");
-                                navigate("/login");
-                                return;
-                            }
-                            modals.open(modal);
-                        },
-                    },
-                    $("Create discussion"),
-                ),
-            ],
-        ),
-        modal,
-        t.div({ className: "flex justify-between" }, [
-            t.form({ role: "search", className: "flex gap-md", onsubmit: onSearch }, [
-                t.div({ className: "field field-row" }, [
-                    t.input({
-                        placeholder: $("Search"),
-                        type: "search",
-                        value: data.search,
-                        oninput: onSearchInput,
-                        name: "search",
-                        id: "search",
-                    }),
-                    t.button({ type: "submit", className: "btn" }, $("Search")),
-                ]),
             ]),
+        ),
+        searchDiscussionModal,
+        t.div({ className: "discussions-filters" }, [
+            t.form(
+                {
+                    role: "search",
+                    className: "discussions-search-md",
+                    onsubmit: onSearch,
+                },
+                [
+                    t.div({ className: "field field-row w-full" }, [
+                        t.input({
+                            placeholder: $("Search"),
+                            type: "search",
+                            value: data.search,
+                            oninput: onSearchInput,
+                            name: "search",
+                            id: "search",
+                        }),
+                        t.button({ type: "submit", className: "btn" }, $("Search")),
+                    ]),
+                ],
+            ),
             sort({
                 onSortChange,
                 data,
             }),
+            t.button(
+                {
+                    className: "btn discussions-search",
+                    onclick: () => {
+                        modals.open(searchDiscussionModal);
+                    },
+                },
+                $("Search"),
+            ),
         ]),
         t.div({ className: "flex flex-col gap-md", rid: data.discussions }, () => {
             if (data.loading) {
@@ -144,11 +172,20 @@ export default function home() {
             }
             if (data.discussions?.length === 0) {
                 if (data.search) {
-                    return t.span({}, $("No results found for '%%'", data.search));
+                    return clearFiltersBlock({
+                        title: $("No results found for '%%'", data.search),
+                    });
                 }
                 return t.span({}, $("Create your first discussion"));
             }
             return t.div({}, [
+                () => {
+                    if (data.search) {
+                        return clearFiltersBlock({
+                            title: $("Search results for '%%'", data.search),
+                        });
+                    }
+                },
                 data.discussions?.map(discussionCard),
                 pagination({ data }),
             ]);

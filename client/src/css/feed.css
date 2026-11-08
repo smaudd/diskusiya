@@ -5,6 +5,7 @@
     flex-direction: column;
     border-bottom: var(--border-1);
     padding: var(--xl) 0;
+    gap: var(--md);
     h3 {
         font-weight: bold;
         font-size: var(--xl);

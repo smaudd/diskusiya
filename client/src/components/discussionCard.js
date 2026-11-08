@@ -8,12 +8,12 @@ export default function discussionCard(discussion) {
             href: `/d/${discussion.slug}`,
             className: "discussion-list-item",
         },
-        t.h3({}, discussion.title),
         recordMeta({
             author: discussion.expand.user,
             updated: discussion.updated,
             created: discussion.created,
         }),
+        t.h3({}, discussion.title),
         markdown(discussion.content),
     );
 }

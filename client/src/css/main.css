@@ -9,7 +9,9 @@
 @import "./discussions.css";
 @import "./settings.css";
 
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     font-family: var(--font);
 }
