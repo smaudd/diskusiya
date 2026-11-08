@@ -50,6 +50,10 @@
     font-weight: bold;
 }
 
+.italic {
+    font-style: italic;
+}
+
 .mt-md {
     margin-top: var(--md);
 }
@@ -60,4 +64,32 @@
 
 .flex-1 {
     flex: 1;
+}
+
+.text-xs {
+    font-size: var(--text-xs);
+}
+
+.text-sm {
+    font-size: var(--text-sm);
+}
+
+.text-md {
+    font-size: var(--text-md);
+}
+
+.text-lg {
+    font-size: var(--text-lg);
+}
+
+.text-xl {
+    font-size: var(--text-xl);
+}
+
+.text-2xl {
+    font-size: var(--text-2xl);
+}
+
+.text-3xl {
+    font-size: var(--text-3xl);
 }

@@ -7,6 +7,15 @@
 
     --font: Verdana;
 
+    --text-xs: 0.75rem;
+    --text-sm: 0.88rem;
+    --text-base: 1rem;
+    --text-md: 1.25rem;
+    --text-lg: 1.5rem;
+    --text-xl: 1.75rem;
+    --text-2xl: 2rem;
+    --text-3xl: 2.5rem;
+
     /* TODO: Improve tokens and decide in some actual variables */
 
     --surface-color: #e6e9ef;
