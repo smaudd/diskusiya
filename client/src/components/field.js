@@ -20,6 +20,6 @@ export default function field(props, fieldElement, children) {
                   )
                 : null,
         ),
-        children
+        children,
     );
 }
