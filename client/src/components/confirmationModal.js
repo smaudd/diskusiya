@@ -1,5 +1,6 @@
 import { t, store } from "shablon";
 import { $ } from "../utils/i18n";
+import modals from "../components/modal";
 
 export default function confirmationModal({ onConfirm }) {
     const data = store({
@@ -17,7 +18,7 @@ export default function confirmationModal({ onConfirm }) {
                     // TODO: Not sure how this usage works here but it does
                     {
                         className: "btn borderless",
-                        onclick: () => app.modals.close(this),
+                        onclick: () => modals.close(this),
                     },
                     $("Cancel"),
                 ),
