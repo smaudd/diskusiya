@@ -177,6 +177,6 @@ function cleanExpiredCache() {
     }
 }
 
-function flushAll() {
+export function flushAll() {
     cacheMap.clear();
 }
