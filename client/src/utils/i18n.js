@@ -1,4 +1,5 @@
 import es from "../../i18n/es.json";
+import { pb } from "../pb";
 
 const labels = {
     es,
@@ -20,7 +21,7 @@ function i18n(lang) {
 export let $ = null;
 
 export function initI18n() {
-    $ = i18n(app.pb.authStore.record.language);
+    $ = i18n(pb.authStore.record?.language || "en");
 }
 
 initI18n();

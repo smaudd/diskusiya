@@ -1,20 +1,14 @@
 import { t, store } from "shablon";
 import layout from "../components/layout";
 import discussionModal from "../components/disussionModal";
-import slugify from "../utils/slugify";
-import randomString from "../utils/randomString";
 import loader from "../components/loader";
 import pagination from "../components/pagination";
 import { $ } from "../utils/i18n";
 import discussionCard from "../components/discussionCard";
-import { discussionFields, getDiscussions } from "../services/data";
 import sort from "../components/sort";
-import toasts from "../components/toast";
 import modals from "../components/modal";
-import { navigate, navigateQueryParam } from "../utils/navigation";
-
-// keep this in the global scope to prevent redefinitions inside the page's function
-const cacheKeys = [];
+import { navigateQueryParam } from "../utils/navigation";
+import { createDiscussion, getDiscussions } from "../services/collections/discussions";
 
 export default function home() {
     const searchParams = new URLSearchParams(location.search);
@@ -28,34 +22,11 @@ export default function home() {
         totalPages: null,
     });
 
-    async function onSubmitDiscussion(e) {
-        e.preventDefault();
-        const [{ value: title }, { value: content }] = e.target.elements;
-        try {
-            const item = await app.pb.collection("discussions").create(
-                {
-                    title,
-                    content,
-                    slug: `${slugify(title)}-${randomString()}`,
-                    user: app.pb.authStore.record.id,
-                },
-                {
-                    fields: "slug",
-                },
-            );
-            toasts.info($("Discussion created!"));
-            modals.close(modal);
-            cacheKeys.forEach(app.cache.flush);
-            navigate(`/d/${item.slug}`)
-            e.target.reset();
-        } catch (err) {
-            console.log(err);
-            toasts.error($("Something went wrong saving the discussion"));
-        }
-    }
-
     const modal = discussionModal({
-        onSubmitDiscussion,
+        onSubmitDiscussion: async (e) => {
+            await createDiscussion({ event: e });
+            modals.close(modal);
+        },
     });
 
     async function onSortChange(e) {
@@ -118,8 +89,10 @@ export default function home() {
             {
                 className: "flex justify-between",
                 onmount: async () => {
-                    const cacheKey = await getDiscussions({ data });
-                    cacheKeys.push(cacheKey);
+                    const res = await getDiscussions({ data });
+                    data.totalPages = res.totalPages;
+                    data.discussions = res.discussions;
+                    data.totalItems = res.totalItems;
                 },
             },
             [
@@ -162,14 +135,14 @@ export default function home() {
             if (data.loading) {
                 return loader();
             }
-            if (data.discussions.length === 0) {
+            if (data.discussions?.length === 0) {
                 if (data.search) {
                     return t.span({}, $("No results found for '%%'", data.search));
                 }
                 return t.span({}, $("Create your first discussion"));
             }
             return t.div({}, [
-                data.discussions.map(discussionCard),
+                data.discussions?.map(discussionCard),
                 pagination({ data }),
             ]);
         }),

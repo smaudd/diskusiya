@@ -12,6 +12,8 @@ import discussion from "./pages/discussion";
 import settings from "./pages/settings";
 import notfound from "./components/notfound";
 import layout from "./components/layout";
+import { navigate } from "./utils/navigation";
+import { pb } from "./pb";
 
 const app = document.getElementById("app");
 const routes = {
@@ -19,18 +21,18 @@ const routes = {
         app.replaceChildren(home());
     },
     "/d/{slug}": (route) => {
-        app.pb.authStore.isValid
+        pb.authStore.isValid
             ? app.replaceChildren(discussion(route))
             : navigate("/");
     },
     "/login": () => {
-        app.pb.authStore.isValid ? navigate("/") : app.replaceChildren(login());
+        pb.authStore.isValid ? navigate("/") : app.replaceChildren(login());
     },
     "/register": () => {
-        app.pb.authStore.isValid ? navigate("/") : app.replaceChildren(register());
+        pb.authStore.isValid ? navigate("/") : app.replaceChildren(register());
     },
     "/settings": () => {
-        app.pb.authStore.isValid
+        pb.authStore.isValid
             ? app.replaceChildren(settings())
             : navigate("/login");
     },

@@ -60,3 +60,7 @@ a[aria-disabled="true"] {
 p {
     margin: 0;
 }
+
+.loader {
+    padding: var(--md);
+}

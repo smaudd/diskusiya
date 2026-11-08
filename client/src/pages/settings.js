@@ -4,13 +4,15 @@ import layout from "../components/layout";
 import field from "../components/field";
 import { $ } from "../utils/i18n"
 import toasts from "../components/toast"
+import { pb } from "../pb";
+import { navigate } from "../utils/navigation";
 
 export default function settings() {
     async function onSubmit(e) {
         e.preventDefault();
         const [{ value: language }] = e.target.elements;
         try {
-            await app.pb.collection("users").update(app.pb.authStore.record.id, {
+            await pb.collection("users").update(pb.authStore.record.id, {
                 language,
             });
             initI18n();
@@ -34,7 +36,7 @@ export default function settings() {
     ];
 
     function onLogout() {
-        app.pb.authStore.clear();
+        pb.authStore.clear();
         navigate("/login");
     }
 
@@ -48,7 +50,7 @@ export default function settings() {
                 options: languageOptions.map((option) => ({
                     value: option.value,
                     label: option.label,
-                    selected: app.pb.authStore.record.language === option.value,
+                    selected: pb.authStore.record.language === option.value,
                 })),
             },
             t.select,

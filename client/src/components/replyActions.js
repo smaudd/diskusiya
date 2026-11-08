@@ -1,9 +1,10 @@
 import { t } from "shablon";
 import { $ } from "../utils/i18n"
+import { pb } from "../pb";
 
 export default function replyActions({ isOwner, onReply, onEdit, onDelete }) {
     let actions = [];
-    if (app.pb.authStore.isValid && onReply) {
+    if (pb.authStore.isValid && onReply) {
         actions.push([
             t.button(
                 {

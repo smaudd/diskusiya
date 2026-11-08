@@ -2,14 +2,15 @@ import { t } from "shablon";
 import layout from "../components/layout";
 import { $ } from "../utils/i18n"
 import toasts from "../components/toast"
+import { pb } from "../pb";
 
 export default function login() {
     async function onSubmit(e) {
         e.preventDefault();
         const [{ value: email }, { value: password }] = e.target.elements;
         try {
-            await app.pb.collection("users").authWithPassword(email, password);
-            if (app.pb.authStore.isValid) {
+            await pb.collection("users").authWithPassword(email, password);
+            if (pb.authStore.isValid) {
                 toasts.info($("Welcome back!"));
                 navigate("/");
             }

@@ -3,5 +3,5 @@ import { $ } from "../utils/i18n"
 
 export default function loader() {
     // TODO: Improve loader UI
-    return t.span({}, $("Loading..."))
+    return t.div({ className: "loader" }, $("Loading..."))
 }

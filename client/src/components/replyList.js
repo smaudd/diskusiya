@@ -6,172 +6,79 @@ import replyForm from "./replyForm";
 import markdown from "./markdown";
 import { navigateQueryParam } from "../utils/navigation";
 import { $ } from "../utils/i18n";
-import toasts from "../components/toast";
 import modals from "../components/modal";
-import logger from "../services/logger";
 import confirmationModal from "./confirmationModal";
+import {
+    createOrUpdateReply,
+    deleteReply,
+    getReplies,
+} from "../services/collections/replies";
+import { pb } from "../pb";
 
-
-// TODO: Chunck this file into smaller modules
 // TODO: Add pagination to replies
-export default function replyList({ data }) {
+export default function replyList({ discussionId }) {
     let deleteModal = null;
     const searchParams = new URLSearchParams(location.search);
-    const localData = store({
+    const data = store({
         reply: null,
         replies: [],
         loading: false,
         focus: searchParams.get("focus"),
         currentReplyContent: "",
         mode: null,
+        discussionId: discussionId,
+        sort: searchParams.get("sort"),
     });
     async function onSortChange(e) {
         data.sort = e.target.value;
-        navigateQueryParam([
-            {
-                name: "sort",
-                value: data.sort,
-            },
-        ]);
-    }
-    async function getReplies() {
-        if (!data.discussion) return;
-        localData.loading = true;
-        try {
-            const filter = app.pb.filter("discussion = {:id} && replyingTo:length = 0", {
-                id: data.discussion.id,
-            });
-            const replies = await app.pb.collection("replies").getList(1, 20, {
-                filter,
-                expand: "user,replies_via_replyingTo,replies_via_replyingTo.user",
-                sort: data.sort,
-            });
-            localData.replies = replies.items;
-        } catch (err) {
-            console.log(err);
-            toasts.error($("Something went wrong getting replies"));
-        } finally {
-            localData.loading = false;
-        }
-    }
-    async function onSubmitReply(e) {
-        e.preventDefault();
-        const [{ value: content }] = e.target.elements;
-        const replyingTo = e.target.dataset.replyingTo;
-        if (localData.currentReplyContent) {
-            try {
-                const update = await app.pb
-                    .collection("replies")
-                    .update(localData.reply, {
-                        content,
-                    });
-                toasts.info($("Reply updated successfully"));
-                function updateReply(reply) {
-                    if (reply.id === localData.reply) {
-                        reply.content = content;
-                        reply.updated = update.updated;
-                    }
-                    return reply;
-                }
-                localData.replies = localData.replies.map((reply) => {
-                    reply = updateReply(reply);
-                    // see if we need to update the expanded
-                    if (reply.expand?.replies_via_replyingTo?.length) {
-                        reply.expand.replies_via_replyingTo.map(updateReply);
-                    }
-                    return reply;
-                });
-                localData.reply = null;
-                localData.currentReplyContent = null;
-            } catch (err) {
-                logger(err, "error");
-                toasts.error($("Something went wrong updating your reply"));
-            }
-            return;
-        }
-        try {
-            const reply = await app.pb.collection("replies").create({
-                content,
-                user: app.pb.authStore.record.id,
-                discussion: data.discussion.id,
-                replyingTo,
-            });
-            navigateQueryParam([
-                {
-                    name: "focus",
-                    value: `reply-${reply.id}`,
-                },
-            ]);
-            toasts.info($("Reply created successfully"));
-        } catch (err) {
-            logger(err, "error");
-            toasts.error($("Something went wrong updating the discussion"));
-        } finally {
-            app.cache.flushAll();
-        }
-    }
-    // TODO: Imporve this focus stuff
-    // watch(
-    //     () => [localData.focus],
-    //     () => {
-    //         // it seems watcher runs after elements are available in the DOM. This doens't feel ok but it seems to work
-    //         setTimeout(() => {
-    //             if (localData.focus) {
-    //                 const el = document.getElementById(localData.focus);
-    //                 if (el) {
-    //                     el.scrollIntoView({
-    //                         behavior: "smooth",
-    //                         block: "center",
-    //                     });
-    //                     el.classList.add("focus");
-    //                     setTimeout(() => {
-    //                         el.classList.remove("focus");
-    //                     }, 2000);
-    //                 }
-    //             }
-    //         });
-    //     },
-    // );
-    async function onDeleteReply() {
-        try {
-            await app.pb.collection("replies").delete(localData.reply.id);
-            localData.replies = localData.replies.filter((reply) => {
-                if (reply.id === localData.reply.id) {
-                    return false;
-                }
-                // see if we need to update the expanded
-                if (reply.expand?.replies_via_replyingTo?.length) {
-                    reply.expand.replies_via_replyingTo =
-                        reply.expand.replies_via_replyingTo.filter(
-                            (reply) => reply.id !== localData.reply.id,
-                        );
-                }
-                return true;
-            });
-            localData.reply = null;
-            toasts.info($("Reply deleted successfully"));
-            modals.close(deleteModal);
-        } catch (err) {
-            toasts.error($("Something went wrong deleting this reply"));
-        } finally {
-        }
+        data.replies = await getReplies({ data });
     }
     function onReplyCreateOrUpdate(mode, reply) {
         return () => {
-            localData.reply = reply.id;
-            localData.currentReplyContent = mode === "update" ? reply.content : null;
-            localData.mode = mode;
+            data.reply = reply.id;
+            data.currentReplyContent = mode === "update" ? reply.content : null;
+            data.mode = mode;
         };
     }
     function onCancelReply() {
-        localData.reply = null;
-        localData.currentReplyContent = null;
-        localData.mode = null;
+        data.reply = null;
+        data.currentReplyContent = null;
+        data.mode = null;
     }
+    async function onSubmitReply(e) {
+        const { replies, id } = await createOrUpdateReply({
+            data,
+            event: e,
+        });
+        data.replies = replies;
+        data.focus = id;
+        data.reply = null;
+        data.currentReplyContent = null;
+    }
+    watch(
+        () => {
+            data.focus;
+        },
+        () => {
+            // get latest reply
+            setTimeout(() => {
+                if (data.focus) {
+                    const el = document.getElementById(`reply-${data.focus}`);
+                    el.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+                }
+                data.focus = null;
+            });
+        },
+    );
     return t.div(
         {
-            onmount: getReplies,
-            rid: localData.reply,
+            onmount: async () => {
+                data.replies = await getReplies({ data });
+            },
+            rid: "never",
         },
         sort({
             data,
@@ -179,24 +86,27 @@ export default function replyList({ data }) {
         }),
         () => {
             deleteModal = confirmationModal({
-                onConfirm: onDeleteReply,
+                onConfirm: async () => {
+                    data.reply = await deleteReply({ data });
+                    modals.close(deleteModal);
+                },
             });
             return deleteModal;
         },
         () => {
-            if (localData.loading) {
+            if (data.loading) {
                 return t.span({}, $("Loading..."));
             }
             return t.div(
                 {
                     className: "flex flex-col gap-md mt-md",
-                    rid: JSON.stringify(localData.reply),
+                    rid: `${data.replies.map((i) => i.content).join(",")}-${data?.replies?.length}`,
                 },
-                localData?.replies.map((reply) => {
+                data?.replies?.map((reply) => {
                     return t.div(
                         {
                             className: "reply-block",
-                            rid: `${localData.reply?.id}-${reply.id}`,
+                            rid: `${data.reply?.id}-${reply.id}`,
                         },
                         [
                             () =>
@@ -220,7 +130,7 @@ export default function replyList({ data }) {
                                         {
                                             id: `reply-${subReply.id}`,
                                             className: "subreply",
-                                            rid: `${localData.reply?.id}-${subReply.id}`,
+                                            rid: `${subReply.content}-${subReply.id}`,
                                         },
                                         [
                                             recordMeta({
@@ -232,31 +142,31 @@ export default function replyList({ data }) {
                                             () =>
                                                 replyActions({
                                                     isOwner:
-                                                        app.pb.authStore.record.id ===
+                                                        pb.authStore.record.id ===
                                                         subReply.user,
                                                     onEdit: onReplyCreateOrUpdate(
                                                         "update",
                                                         subReply,
                                                     ),
                                                     onDelete: () => {
-                                                        localData.reply = subReply;
-                                                        localData.mode = "delete";
+                                                        data.reply = subReply;
+                                                        data.mode = "delete";
                                                         modals.open(deleteModal);
                                                     },
                                                 }),
                                             () => {
                                                 return replyForm({
                                                     id: "subreply-form",
-                                                    show: localData.reply == subReply.id,
+                                                    show: data.reply == subReply.id,
                                                     onSubmitReply,
                                                     reply,
-                                                    value: localData.currentReplyContent,
+                                                    value: data.currentReplyContent,
                                                     fieldLabel:
-                                                        localData.mode === "update"
+                                                        data.mode === "update"
                                                             ? $("Update reply")
                                                             : $("Reply"),
                                                     submitLabel:
-                                                        localData.mode === "update"
+                                                        data.mode === "update"
                                                             ? $("Update")
                                                             : $("Submit"),
                                                     onCancel: onCancelReply,
@@ -266,28 +176,28 @@ export default function replyList({ data }) {
                                     ),
                                 ),
                             replyActions({
-                                isOwner: app.pb.authStore.record.id === reply.user,
+                                isOwner: pb.authStore.record.id === reply.user,
                                 onReply: onReplyCreateOrUpdate("create", reply),
                                 onEdit: onReplyCreateOrUpdate("update", reply),
                                 onDelete: () => {
-                                    localData.reply = reply;
-                                    localData.mode = "delete";
+                                    data.reply = reply;
+                                    data.mode = "delete";
                                     modals.open(deleteModal);
                                 },
                             }),
                             () => {
                                 return replyForm({
                                     id: "reply-form",
-                                    show: localData.reply == reply.id,
+                                    show: data.reply == reply.id,
                                     onSubmitReply,
                                     reply,
-                                    value: localData.currentReplyContent,
+                                    value: data.currentReplyContent,
                                     fieldLabel:
-                                        localData.mode === "update"
+                                        data.mode === "update"
                                             ? $("Update reply")
                                             : $("Reply"),
                                     submitLabel:
-                                        localData.mode === "update"
+                                        data.mode === "update"
                                             ? $("Update")
                                             : $("Submit"),
                                     onCancel: onCancelReply,
@@ -298,11 +208,15 @@ export default function replyList({ data }) {
                 }),
             );
         },
-        replyForm({
-            id: "reply-form",
-            show: true,
-            onSubmitReply,
-            reply: null,
-        }),
+        () => {
+            if (!data.loading) {
+                replyForm({
+                    id: "reply-form",
+                    show: true,
+                    onSubmitReply,
+                    reply: null,
+                });
+            }
+        },
     );
 }

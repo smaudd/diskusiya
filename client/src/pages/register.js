@@ -13,13 +13,13 @@ export default function register() {
             return;
         }
         try {
-            await app.pb.collection("users").create({
+            await pb.collection("users").create({
                 email,
                 password,
                 passwordConfirm,
             });
-            await app.pb.collection("users").authWithPassword(email, password);
-            if (app.pb.authStore.isValid) {
+            await pb.collection("users").authWithPassword(email, password);
+            if (pb.authStore.isValid) {
                 toasts.info($("Welcome!"));
                 navigate("/");
             }
