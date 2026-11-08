@@ -129,7 +129,7 @@ export default function replyList({ discussionId }) {
                                     },
                                     [
                                         recordMeta({
-                                            author: reply?.expand?.user?.name,
+                                            author: reply?.expand?.user,
                                             updated: reply?.updated,
                                             created: reply?.created,
                                         }),
@@ -146,7 +146,7 @@ export default function replyList({ discussionId }) {
                                         },
                                         [
                                             recordMeta({
-                                                author: subReply?.expand?.user?.name,
+                                                author: subReply?.expand?.user,
                                                 updated: subReply?.updated,
                                                 created: subReply?.created,
                                             }),

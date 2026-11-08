@@ -18,7 +18,7 @@ const cacheMap = new Map();
 const fiveMinues = 5 * 60 * 1000;
 
 export const discussionFields =
-    "slug,title,content:excerpt(200,true),expand.user.name,updated,created";
+    "slug,title,content:excerpt(200,true),expand.user.name,expand.user.avatar,expand.user.id,expand.user.collectionId,updated,created";
 
 export function flushCache(key) {
     cacheMap.delete(key);

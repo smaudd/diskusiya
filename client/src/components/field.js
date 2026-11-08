@@ -1,7 +1,7 @@
 import { t } from "shablon";
 import { $ } from "../utils/i18n";
 
-export default function field(props, fieldElement) {
+export default function field(props, fieldElement, children) {
     const className = props.className;
     const options = props.options || [];
     delete props.className;
@@ -20,5 +20,6 @@ export default function field(props, fieldElement) {
                   )
                 : null,
         ),
+        children
     );
 }

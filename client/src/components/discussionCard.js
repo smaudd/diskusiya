@@ -10,7 +10,7 @@ export default function discussionCard(discussion) {
         },
         t.h3({}, discussion.title),
         recordMeta({
-            author: discussion.expand.user.name,
+            author: discussion.expand.user,
             updated: discussion.updated,
             created: discussion.created,
         }),

@@ -100,7 +100,7 @@ export default function discussion(route) {
                         ]),
                         markdown(data?.discussion?.content),
                         recordMeta({
-                            author: data.discussion?.expand?.user?.name,
+                            author: data.discussion?.expand?.user,
                             updated: data.discussion?.updated,
                             created: data.discussion?.created,
                         }),

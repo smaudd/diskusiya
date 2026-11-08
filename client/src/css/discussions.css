@@ -25,4 +25,10 @@
     gap: var(--md);
     justify-content: space-between;
     margin: var(--md) 0;
+    img {
+        width: 2rem;
+        height: 2rem;
+        object-fit: contain;
+        border-radius: 100%;
+    }
 }
