@@ -22,6 +22,8 @@ export default function login() {
         }
     }
 
+    meta({ title: $("Login") });
+
     const form = t.form(
         { className: "flex flex-col gap-md", onsubmit: onSubmit },
         field(

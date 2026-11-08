@@ -8,6 +8,7 @@ import { pb } from "../pb";
 import { navigate } from "../utils/navigation";
 import { collections } from "../services/collections/config";
 import { flushAll } from "../services/collections/discussions";
+import meta from "../services/meta";
 
 export default function settings() {
     const data = store({
@@ -29,6 +30,8 @@ export default function settings() {
             toasts.error($(message));
         }
     }
+
+    meta({ title: $("Settings") });
 
     const languageOptions = [
         {

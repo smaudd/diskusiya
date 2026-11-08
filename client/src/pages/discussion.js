@@ -15,6 +15,7 @@ import {
     getDiscussion,
 } from "../services/collections/discussions";
 import { pb } from "../pb";
+import meta from "../services/meta";
 
 export default function discussion(route) {
     let updateModal = null;
@@ -35,6 +36,7 @@ export default function discussion(route) {
                     if (data?.discussion?.expand.user.id === pb?.authStore?.record?.id) {
                         data.isOwner = true;
                     }
+                    meta({ title: data.discussion?.title })
                 },
                 rid: data.discussion?.slug,
                 className: "flex flex-col gap-xl mt-xl",

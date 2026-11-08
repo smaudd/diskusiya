@@ -10,6 +10,8 @@ import modals from "../components/modal";
 import { navigate, navigateQueryParam } from "../utils/navigation";
 import { createDiscussion, getDiscussions } from "../services/collections/discussions";
 import searchModalMobile from "../components/searchModalMobile";
+import metatitle from "../services/meta";
+import meta from "../services/meta";
 
 export default function home() {
     const searchParams = new URLSearchParams(location.search);
@@ -121,6 +123,7 @@ export default function home() {
                     data.totalPages = res.totalPages;
                     data.discussions = res.discussions;
                     data.totalItems = res.totalItems;
+                    meta({ title: $("Page (%%)", data.page) })
                 },
             },
             t.div({ className: "discussions-header" }, [

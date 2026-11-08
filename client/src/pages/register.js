@@ -3,6 +3,7 @@ import layout from "../components/layout";
 import { $ } from "../utils/i18n";
 import toasts from "../components/toast";
 import field from "../components/field";
+import meta from "../services/meta";
 
 export default function register() {
     async function onSubmit(e) {
@@ -29,6 +30,8 @@ export default function register() {
             toasts.error($(message));
         }
     }
+
+    meta({ title: $("Register") });
 
     const form = t.form(
         { className: "flex flex-col gap-md", onsubmit: onSubmit },
