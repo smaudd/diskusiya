@@ -5,13 +5,13 @@ import slugify from "../utils/slugify";
 import randomString from "../utils/randomString";
 import loader from "../components/loader";
 import pagination from "../components/pagination";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 import discussionCard from "../components/discussionCard";
-import { getDiscussions } from "../services/data";
+import { discussionFields, getDiscussions } from "../services/data";
 import sort from "../components/sort";
-import toasts from "../components/toast"
-import modals from "../components/modal"
-import { navigateQueryParam } from "../utils/navigation";
+import toasts from "../components/toast";
+import modals from "../components/modal";
+import { navigate, navigateQueryParam } from "../utils/navigation";
 
 // keep this in the global scope to prevent redefinitions inside the page's function
 const cacheKeys = [];
@@ -32,30 +32,21 @@ export default function home() {
         e.preventDefault();
         const [{ value: title }, { value: content }] = e.target.elements;
         try {
-            await app.pb.collection("discussions").create({
-                title,
-                content,
-                slug: `${slugify(title)}-${randomString()}`,
-                user: app.pb.authStore.record.id,
-            });
+            const item = await app.pb.collection("discussions").create(
+                {
+                    title,
+                    content,
+                    slug: `${slugify(title)}-${randomString()}`,
+                    user: app.pb.authStore.record.id,
+                },
+                {
+                    fields: "slug",
+                },
+            );
             toasts.info($("Discussion created!"));
             modals.close(modal);
             cacheKeys.forEach(app.cache.flush);
-            // cleanup filters to let user see their post on the first position
-            navigateQueryParam([
-                {
-                    name: "sort",
-                    value: "-updated",
-                },
-                {
-                    name: "page",
-                    value: 1,
-                },
-                {
-                    name: "search",
-                    value: "",
-                },
-            ]);
+            navigate(`/d/${item.slug}`)
             e.target.reset();
         } catch (err) {
             console.log(err);

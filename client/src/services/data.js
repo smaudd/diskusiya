@@ -10,6 +10,8 @@ import toasts from "../components/toast"
 
 const cacheMap = new Map();
 
+export const discussionFields = "slug,title,content:excerpt(200,true),expand.user.name,updated,created"
+
 export function flushCache(key) {
     cacheMap.delete(key);
 }
@@ -19,7 +21,7 @@ export async function getDiscussions({ data }) {
     const rules = {
         sort: data.sort,
         expand: "user",
-        fields: "slug,title,content:excerpt(200,true),expand.user.name,updated,created",
+        fields: discussionFields,
     };
     if (data.search) {
         rules.filter = app.pb.filter("title ~ {:search} || content ~ {:search}", {
