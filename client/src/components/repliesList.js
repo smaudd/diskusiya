@@ -15,6 +15,7 @@ import {
 } from "../services/collections/replies";
 import { pb } from "../pb";
 import toast from "./toast";
+import replyBlock from "./replyBlock";
 
 // TODO: Add pagination to replies
 export default function replyList({ discussionId }) {
@@ -86,37 +87,12 @@ export default function replyList({ discussionId }) {
         },
     );
 
-    function replyBlock({ reply, className }, children) {
-        return t.div(
-            {
-                className: className,
-                id: `reply-${reply.id}`,
-            },
-            [
-                reply.deleted
-                    ? t.span(
-                          {
-                              className: "text-xs font-italic",
-                          },
-                          $("deleted"),
-                      )
-                    : recordMeta({
-                          author: reply?.expand?.user,
-                          updated: reply?.updated,
-                          created: reply?.created,
-                      }),
-                markdown(reply.content),
-            ],
-            children,
-        );
-    }
-
     return t.div(
         {
             onmount: async () => {
                 data.replies = await getReplies({ data });
             },
-            rid: discussionId
+            rid: discussionId,
         },
         sort({
             data,
@@ -146,51 +122,53 @@ export default function replyList({ discussionId }) {
                             rid: JSON.stringify(reply),
                         },
                         [
-                            () => replyBlock({ reply, className: "reply" }),
-                            () =>
-                                reply?.expand?.replies_via_replyingTo?.map((subReply) =>
-                                    t.div(
-                                        {},
-                                        replyBlock(
-                                            {
-                                                reply: subReply,
-                                                className: "reply subreply",
-                                            },
-                                            [
-                                                replyActions({
-                                                    isOwner:
-                                                        pb?.authStore?.record?.id ===
-                                                        subReply.user,
-                                                    onEdit: onReplyCreateOrUpdate(
-                                                        "update",
-                                                        subReply,
-                                                    ),
-                                                    onDelete: () => {
-                                                        data.reply = subReply;
-                                                        data.mode = "delete";
-                                                        modals.open(deleteModal);
-                                                    },
-                                                }),
-                                                replyForm({
-                                                    id: "subreply-form",
-                                                    show: data.reply?.id === subReply.id,
-                                                    onSubmitReply,
-                                                    reply,
-                                                    value: data.currentReplyContent,
-                                                    fieldLabel:
-                                                        data.mode === "update"
-                                                            ? $("Update reply")
-                                                            : $("Reply"),
-                                                    submitLabel:
-                                                        data.mode === "update"
-                                                            ? $("Update")
-                                                            : $("Submit"),
-                                                    onCancel: onCancelReply,
-                                                }),
-                                            ],
-                                        ),
+                            replyBlock({ reply, className: "reply" }),
+                            reply?.expand?.replies_via_replyingTo?.map((subreply) =>
+                                t.div(
+                                    {},
+                                    replyBlock(
+                                        {
+                                            reply: subreply,
+                                            className: "reply subreply",
+                                        },
+                                        [
+                                            replyActions({
+                                                isOwner:
+                                                    pb?.authStore?.record?.id ===
+                                                    subreply?.user,
+                                                onEdit: onReplyCreateOrUpdate(
+                                                    "update",
+                                                    subreply,
+                                                ),
+                                                onDelete: () => {
+                                                    data.reply = subreply;
+                                                    data.mode = "delete";
+                                                    modals.open(deleteModal);
+                                                },
+                                                deleted: subreply.deleted,
+                                            }),
+                                            replyForm({
+                                                id: "subreply-form",
+                                                show:
+                                                    data.reply?.id === subreply?.id &&
+                                                    data.mode !== "delete",
+                                                onSubmitReply,
+                                                reply,
+                                                value: data.currentReplyContent,
+                                                fieldLabel:
+                                                    data.mode === "update"
+                                                        ? $("Update reply")
+                                                        : $("Reply"),
+                                                submitLabel:
+                                                    data.mode === "update"
+                                                        ? $("Update")
+                                                        : $("Submit"),
+                                                onCancel: onCancelReply,
+                                            }),
+                                        ],
                                     ),
                                 ),
+                            ),
                             replyActions({
                                 isOwner: pb.authStore?.record?.id === reply.user,
                                 onReply: onReplyCreateOrUpdate("create", reply),
@@ -200,11 +178,14 @@ export default function replyList({ discussionId }) {
                                     data.mode = "delete";
                                     modals.open(deleteModal);
                                 },
+                                deleted: reply.deleted,
                             }),
                             () => {
                                 return replyForm({
                                     id: "reply-form",
-                                    show: data.reply?.id == reply.id,
+                                    show:
+                                        data.reply?.id == reply.id &&
+                                        data.mode !== "delete",
                                     onSubmitReply,
                                     reply,
                                     value: data.currentReplyContent,

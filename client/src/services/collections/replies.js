@@ -20,6 +20,7 @@ export async function getReplies({ data }) {
         const filter = pb.filter("discussion = {:id} && replyingTo:length = 0", {
             id: data.discussionId,
         });
+        // TODO: Replies pagination
         const replies = await pb.collection("replies").getList(1, 20, {
             filter,
             expand: repliesExpand,
@@ -38,28 +39,28 @@ export async function deleteReply({ data }) {
         await pb.collection(collections.replies).update(data.reply.id, {
             deleted: true,
             user: "",
-            content: "",
+            content: "[DELETED]",
         });
         data.replies = data.replies.map((reply) => {
             if (reply.id === data.reply.id) {
                 return {
-                    id: reply.id,
+                    ...reply,
                     deleted: true,
                 };
             }
             // see if we need to update the expanded
             if (reply.expand?.replies_via_replyingTo?.length) {
                 reply.expand.replies_via_replyingTo =
-                    reply.expand.replies_via_replyingTo.map((reply) => {
-                        if (reply.id !== data.reply.id) {
+                    reply.expand.replies_via_replyingTo.map((subreply) => {
+                        if (subreply.id !== data.reply.id) {
                             return {
-                                id: reply.id,
+                                ...subreply,
                                 deleted: true,
                             };
                         }
                     });
             }
-            return true;
+            return reply;
         });
         toasts.info($("Reply deleted successfully"));
         return null;

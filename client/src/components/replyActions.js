@@ -2,9 +2,9 @@ import { t } from "shablon";
 import { $ } from "../utils/i18n";
 import { pb } from "../pb";
 
-export default function replyActions({ isOwner, onReply, onEdit, onDelete }) {
+export default function replyActions({ isOwner, onReply, onEdit, onDelete, deleted }) {
     let actions = [];
-    if (pb.authStore.isValid && onReply) {
+    if (pb.authStore.isValid && onReply && !deleted) {
         actions.push([
             t.button(
                 {
@@ -16,7 +16,7 @@ export default function replyActions({ isOwner, onReply, onEdit, onDelete }) {
         ]);
     }
     if (isOwner) {
-        if (onEdit) {
+        if (onEdit && !deleted) {
             actions.push(
                 t.button(
                     {
@@ -27,7 +27,7 @@ export default function replyActions({ isOwner, onReply, onEdit, onDelete }) {
                 ),
             );
         }
-        if (onDelete) {
+        if (onDelete && !deleted) {
             actions.push(
                 t.button(
                     {
