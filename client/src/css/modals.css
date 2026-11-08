@@ -30,7 +30,7 @@
         scrollbar-width: thin;
         flex-grow: 1;
         position: relative;
-        overflow: auto;
+        overflow-y: auto;
     }
     .modal-header {
         font-weight: bold;
