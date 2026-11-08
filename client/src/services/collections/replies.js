@@ -35,17 +35,29 @@ export async function getReplies({ data }) {
 
 export async function deleteReply({ data }) {
     try {
-        await pb.collection(collections.replies).delete(data.reply.id);
-        data.replies = data.replies.filter((reply) => {
+        await pb.collection(collections.replies).update(data.reply.id, {
+            deleted: true,
+            user: "",
+            content: "",
+        });
+        data.replies = data.replies.map((reply) => {
             if (reply.id === data.reply.id) {
-                return false;
+                return {
+                    id: reply.id,
+                    deleted: true,
+                };
             }
             // see if we need to update the expanded
             if (reply.expand?.replies_via_replyingTo?.length) {
                 reply.expand.replies_via_replyingTo =
-                    reply.expand.replies_via_replyingTo.filter(
-                        (reply) => reply.id !== data.reply.id,
-                    );
+                    reply.expand.replies_via_replyingTo.map((reply) => {
+                        if (reply.id !== data.reply.id) {
+                            return {
+                                id: reply.id,
+                                deleted: true,
+                            };
+                        }
+                    });
             }
             return true;
         });
@@ -78,7 +90,6 @@ async function updateReply({ content, data }) {
             return reply;
         });
         toasts.info($("Reply updated successfully"));
-        console.log("got replies", JSON.stringify(replies))
         return replies;
     } catch (err) {
         logger(err, "error");
