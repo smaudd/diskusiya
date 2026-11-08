@@ -16,23 +16,28 @@ export default function replyActions({ isOwner, onReply, onEdit, onDelete }) {
         ]);
     }
     if (isOwner) {
-        actions = [
-            ...actions,
-            t.button(
-                {
-                    className: "btn borderless",
-                    onclick: onEdit,
-                },
-                $("Edit"),
-            ),
-            t.button(
-                {
-                    className: "btn borderless",
-                    onclick: onDelete,
-                },
-                $("Delete"),
-            ),
-        ];
+        if (onEdit) {
+            actions.push(
+                t.button(
+                    {
+                        className: "btn borderless",
+                        onclick: onEdit,
+                    },
+                    $("Edit"),
+                ),
+            );
+        }
+        if (onDelete) {
+            actions.push(
+                t.button(
+                    {
+                        className: "btn borderless",
+                        onclick: onDelete,
+                    },
+                    $("Delete"),
+                ),
+            );
+        }
     }
 
     return t.div({ className: "flex gap-md justify-end" }, actions);

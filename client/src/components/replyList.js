@@ -36,7 +36,13 @@ export default function replyList({ discussionId }) {
     }
     function onReplyCreateOrUpdate(mode, reply) {
         return () => {
-            data.reply = reply.id;
+            if (mode === data.mode && reply.id === data.reply.id) {
+                data.reply = null
+                data.currentReplyContent = null
+                data.mode = null
+                return
+            }
+            data.reply = reply;
             data.currentReplyContent = mode === "update" ? reply.content : null;
             data.mode = mode;
         };
@@ -160,10 +166,10 @@ export default function replyList({ discussionId }) {
                                                         modals.open(deleteModal);
                                                     },
                                                 }),
-                                            () => {
-                                                return replyForm({
+                                            () =>
+                                                replyForm({
                                                     id: "subreply-form",
-                                                    show: data.reply == subReply.id,
+                                                    show: data.reply?.id === subReply.id,
                                                     onSubmitReply,
                                                     reply,
                                                     value: data.currentReplyContent,
@@ -176,15 +182,16 @@ export default function replyList({ discussionId }) {
                                                             ? $("Update")
                                                             : $("Submit"),
                                                     onCancel: onCancelReply,
-                                                });
-                                            },
+                                                }),
                                         ],
                                     ),
                                 ),
                             replyActions({
                                 isOwner: pb.authStore?.record?.id === reply.user,
                                 onReply: onReplyCreateOrUpdate("create", reply),
-                                onEdit: onReplyCreateOrUpdate("update", reply),
+                                onEdit:
+                                    data.reply?.id !== reply.id &&
+                                    onReplyCreateOrUpdate("update", reply),
                                 onDelete: () => {
                                     data.reply = reply;
                                     data.mode = "delete";
@@ -194,7 +201,7 @@ export default function replyList({ discussionId }) {
                             () => {
                                 return replyForm({
                                     id: "reply-form",
-                                    show: data.reply == reply.id,
+                                    show: data.reply?.id == reply.id,
                                     onSubmitReply,
                                     reply,
                                     value: data.currentReplyContent,
