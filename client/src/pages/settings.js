@@ -2,8 +2,8 @@ import { t } from "shablon";
 import { initI18n } from "../utils/i18n";
 import layout from "../components/layout";
 import field from "../components/field";
-import { $ } from "../utils/i18n"
-import toasts from "../components/toast"
+import { $ } from "../utils/i18n";
+import toasts from "../components/toast";
 import { pb } from "../pb";
 import { navigate } from "../utils/navigation";
 
@@ -62,9 +62,7 @@ export default function settings() {
             {},
             $("Settings"),
             form,
-            t.div({}, [
-                t.button({ className: "btn", onclick: onLogout }, $("Logout")),
-            ]),
+            t.div({}, [t.button({ className: "btn", onclick: onLogout }, $("Logout"))]),
         ),
     );
 }

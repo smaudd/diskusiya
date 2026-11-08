@@ -1,5 +1,5 @@
 import { t, store } from "shablon";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 import { pb } from "../pb";
 
 export default function header(title) {

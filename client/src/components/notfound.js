@@ -1,5 +1,5 @@
 import { t } from "shablon";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 
 export default function notfound() {
     return t.div({}, [

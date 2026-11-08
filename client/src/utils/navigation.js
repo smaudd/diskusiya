@@ -1,6 +1,6 @@
 export function navigate(route) {
     history.pushState({}, null, route);
-};
+}
 
 export function navigateQueryParam(paramsList) {
     const params = new URLSearchParams(window.location.search);
@@ -12,4 +12,4 @@ export function navigateQueryParam(paramsList) {
         "",
         decodeURIComponent(`${window.location.pathname}?${params}`),
     );
-};
+}

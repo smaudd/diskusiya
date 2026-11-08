@@ -1,7 +1,7 @@
 import { t, store } from "shablon";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 import field from "./field";
-import modals from "../components/modal"
+import modals from "../components/modal";
 
 export default function discussionModal({
     title = $("Create discussion"),

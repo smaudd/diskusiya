@@ -1,14 +1,11 @@
 import { t } from "shablon";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 
-export default function field(
-    props,
-    fieldElement,
-) {
-    const className = props.className
-    const options = props.options || []
-    delete props.className
-    delete props.options
+export default function field(props, fieldElement) {
+    const className = props.className;
+    const options = props.options || [];
+    delete props.className;
+    delete props.options;
     return t.div(
         { className: `field${className ? ` ${className}` : ""}` },
         t.label({ "html-for": props.id }, $(props.label)),

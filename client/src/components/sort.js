@@ -1,6 +1,6 @@
 import { t } from "shablon";
 import field from "./field";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 
 export default function sort({ onSortChange, data }) {
     return field(

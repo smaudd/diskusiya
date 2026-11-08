@@ -21,9 +21,7 @@ const routes = {
         app.replaceChildren(home());
     },
     "/d/{slug}": (route) => {
-        pb.authStore.isValid
-            ? app.replaceChildren(discussion(route))
-            : navigate("/");
+        pb.authStore.isValid ? app.replaceChildren(discussion(route)) : navigate("/");
     },
     "/login": () => {
         pb.authStore.isValid ? navigate("/") : app.replaceChildren(login());
@@ -32,9 +30,7 @@ const routes = {
         pb.authStore.isValid ? navigate("/") : app.replaceChildren(register());
     },
     "/settings": () => {
-        pb.authStore.isValid
-            ? app.replaceChildren(settings())
-            : navigate("/login");
+        pb.authStore.isValid ? app.replaceChildren(settings()) : navigate("/login");
     },
     // TODO: Not sure if this is the way to 404 every not known route but it seems to work
     "/{any}": () => {
@@ -52,4 +48,3 @@ for (const routeKey of Object.keys(routes)) {
 }
 
 router(routes, { pretty: true });
-

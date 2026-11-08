@@ -1,5 +1,5 @@
 import { t } from "shablon";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 /*
   Taken from https://ganigeorgiev.com/pocketbase/pocketbase/files/ui/src/base/toast.js
 
@@ -163,5 +163,5 @@ export default {
     error: errorToast,
     success: successToast,
     remove: removeToast,
-    removeAll: removeAllToasts
-}
+    removeAll: removeAllToasts,
+};

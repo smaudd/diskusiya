@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Taken from https://ganigeorgiev.com/bugstage/bugstage/files/ui/src/utils.markdown.js
  */
 
@@ -89,7 +89,7 @@ export default function renderMarkdown(content) {
     // note: check the util sanitizer func as some of the attrs and elements will be stripped
     return DOMPurify.sanitize(md.render(content || ""), DOMPurifyConfig);
     // return app.utils.sanitizeHTML(md.render(content || ""));
-};
+}
 
 // Markdown-it helpers and plugins
 //

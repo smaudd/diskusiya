@@ -1,5 +1,5 @@
 import { t } from "shablon";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 import { pb } from "../pb";
 
 export default function replyActions({ isOwner, onReply, onEdit, onDelete }) {

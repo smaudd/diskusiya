@@ -1,12 +1,12 @@
 import { t } from "shablon";
-import { $ } from "../utils/i18n"
+import { $ } from "../utils/i18n";
 
 export default function pagination({ data }) {
-    const params = new URLSearchParams(window.location.search)
-    params.delete("page")
+    const params = new URLSearchParams(window.location.search);
+    params.delete("page");
 
     // important for UX if this isn't set user will lose every query param except the current page
-    const paramsString = params.size >= 1 ? `&${params}` : ""
+    const paramsString = params.size >= 1 ? `&${params}` : "";
     return t.div({ className: "flex gap-md justify-center mt-md" }, [
         // first page
         t.a(

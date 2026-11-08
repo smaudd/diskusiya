@@ -108,7 +108,7 @@ async function open(el) {
 
     // note: use data attribute to avoid conflict with reactive className
     el.setAttribute(modalAttr, "open");
-};
+}
 
 /**
  * Closes the specified modal (or the last/top open one if not explicitly set).
@@ -167,7 +167,7 @@ async function close(el = null, forceClose = false) {
             oldActiveElem = null;
         }, 0);
     }
-};
+}
 
 function initModal(el) {
     if (!el.getAttribute("tabindex")) {
@@ -262,10 +262,10 @@ function findLargestZIndexModal(excludeEl) {
  */
 function getTop() {
     return findLargestZIndexModal();
-};
+}
 
 export default {
     open,
     close,
-    getTop
-}
+    getTop,
+};
