@@ -20,6 +20,8 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Reply creation inside discussion
 - One reply nesting depth
 - Reply editions and deletions inside discussion
+- Users can request email and password resets
+- Users can upload avatars
 
 ### TODO
 
@@ -30,14 +32,15 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Discussion reply with replying to
 - Allow discussions to have images
 - Reports for discussions, replies and users (for the first release I'm planning to leverage this to the Pocketbase admin panel to avoid reimplementing, admins are basically superusers in Pocketbase)
-- Complete user data updates (email, password, name, avatars)
+- Complete password/email confirmations using emailed token
 - Take a look at security
 - Improve the cache system
 - Include Pocketbase binary with the project? Not sure how to handle this yet
+- 
 
 ### Caveats
 
-I'm still unsure if I should keep using Shablon with ES6 imports instead of making it available in the global scope like Pocketbase does 
+This project uses ES6 for everything instead of declaring global variables
 
 ### Notice
 
