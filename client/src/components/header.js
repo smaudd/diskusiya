@@ -7,7 +7,7 @@ import modals from "../components/modal";
 import { createDiscussion } from "../services/collections/discussions";
 import { navigate } from "../utils/navigation";
 
-export default function header({ title }) {
+export default function header() {
     const data = store({
         authStore: pb.authStore,
     });
