@@ -33,6 +33,7 @@ This is primarly an experiment to hone my knowledge in Pocketbase and Shablon
 - Document with JSDoc
 - Discussion replies
 - Discussion reply with replying to
+- Save new discussions and replies as drafts
 - Allow discussions to have images
 - Reports for discussions, replies and users (for the first release I'm planning to leverage this to the Pocketbase admin panel to avoid reimplementing, admins are basically superusers in Pocketbase)
 - Complete password/email confirmations using emailed token
