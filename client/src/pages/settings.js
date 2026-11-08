@@ -9,12 +9,15 @@ import { navigate } from "../utils/navigation";
 import { collections } from "../services/collections/config";
 import { flushAll } from "../services/collections/discussions";
 import meta from "../services/meta";
+import emailResetModal from "../components/emailResetModal";
+import modal from "../components/modal";
 
 export default function settings() {
     const data = store({
         avatar: pb.authStore.record.avatar,
         previewAvatar: false,
     });
+
     async function onSubmitLanguage(e) {
         e.preventDefault();
         const [{ value: language }] = e.target.elements;
@@ -61,7 +64,7 @@ export default function settings() {
             app.replaceChildren(settings());
             toasts.info($("Avatar updated"));
         } catch (err) {
-            console.log(err);
+            toasts.error($("We had a problem updating your %%", $("avatar")));
         } finally {
             flushAll();
         }
@@ -87,6 +90,49 @@ export default function settings() {
         data.previewAvatar = false;
     }
 
+    async function onSubmitEmail(e) {
+        const [{ value: email }] = e.target.elements;
+        try {
+            await pb.collection("users").requestEmailChange(email);
+            toasts.info($("Email request change sent"));
+        } catch (err) {
+            console.log();
+            toasts.error($("We had a problem requesting your %% reset", $("email")));
+        }
+    }
+
+    function requestReset({ type }) {
+        return async (e) => {
+            if (type === "password") {
+                try {
+                    await pb
+                        .collection(collections.users)
+                        .requestPasswordReset(pb.authStore.record.email);
+                    toasts.info($("%% request change sent", $("password")));
+                } catch (err) {
+                    console.log(err);
+                    toasts.error(
+                        $("We had a problem requesting your %% reset", $("password")),
+                    );
+                }
+            }
+            if (type === "email") {
+                console.log('hola?')
+                const [{ value: email }] = e.target.elements;
+                try {
+                    await pb.collection(collections.users).requestEmailChange(email);
+                    toasts.info($("%% request change sent", $("email")));
+
+                } catch (err) {
+                    console.log(err);
+                    toasts.error(
+                        $("We had a problem requesting your %% reset", $("password")),
+                    );
+                }
+            }
+        };
+    }
+
     const languageForm = t.form(
         { className: "settings-form", onsubmit: onSubmitLanguage },
         field(
@@ -104,6 +150,7 @@ export default function settings() {
         ),
         t.button({ type: "submit", className: "btn" }, $("Save")),
     );
+
     const avatarForm = t.form(
         { className: "settings-form", onsubmit: onSubmitAvatar },
         t.div({ className: "avatar-block" }, [
@@ -146,12 +193,31 @@ export default function settings() {
             t.button({ type: "submit", className: "btn" }, $("Save")),
         ]),
     );
+    const emailResetModalRef = emailResetModal({
+        onConfirm: requestReset({ type: "email" }),
+    });
     return layout(
         t.h1({}, $("Settings")),
         t.div({ className: "flex flex-col gap-md", rid: "never" }, [
             languageForm,
             avatarForm,
-            t.div({}, [t.button({ className: "btn", onclick: onLogout }, $("Logout"))]),
+            emailResetModalRef,
+            t.div({ className: "flex flex-col gap-md" }, [
+                t.button(
+                    { className: "btn", onclick: requestReset({ type: "password" }) },
+                    $("Request password reset"),
+                ),
+                t.button(
+                    {
+                        className: "btn",
+                        onclick: () => {
+                            modal.open(emailResetModalRef);
+                        },
+                    },
+                    $("Request email reset"),
+                ),
+                t.button({ className: "btn", onclick: onLogout }, $("Logout")),
+            ]),
         ]),
     );
 }
