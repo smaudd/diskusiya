@@ -1,44 +1,41 @@
 import { t } from "shablon";
 import { $ } from "../utils/i18n";
 import { pb } from "../pb";
+import options from "./options";
 
 export default function replyActions({ isOwner, onReply, onEdit, onDelete, deleted }) {
-    let actions = [];
+    let replyAction = null;
     if (pb.authStore.isValid && onReply && !deleted) {
-        actions.push([
-            t.button(
-                {
-                    className: "btn borderless",
-                    onclick: onReply,
-                },
-                $("Reply"),
-            ),
-        ]);
+        replyAction = t.button(
+            {
+                className: "btn borderless",
+                onclick: onReply,
+            },
+            $("Reply"),
+        );
     }
+    const actions = [];
     if (isOwner) {
         if (onEdit && !deleted) {
-            actions.push(
-                t.button(
-                    {
-                        className: "btn borderless",
-                        onclick: onEdit,
-                    },
-                    $("Edit"),
-                ),
-            );
+            actions.push({
+                attrs: {
+                    onclick: onEdit,
+                },
+                value: $("Edit"),
+            });
         }
         if (onDelete && !deleted) {
-            actions.push(
-                t.button(
-                    {
-                        className: "btn borderless",
-                        onclick: onDelete,
-                    },
-                    $("Delete"),
-                ),
-            );
+            actions.push({
+                attrs: {
+                    onclick: onDelete,
+                },
+                value: $("Delete"),
+            });
         }
     }
+    const opts = options({
+        options: actions
+    });
 
-    return t.div({ className: "flex gap-md justify-end" }, actions);
+    return t.div({ className: "flex gap-md justify-end" }, [replyAction, opts]);
 }

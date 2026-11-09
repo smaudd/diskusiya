@@ -6,6 +6,7 @@
     cursor: pointer;
     font-weight: bold;
     border: var(--border-1);
+    text-align: center;
 }
 
 .btn.borderless {
