@@ -16,7 +16,7 @@ export default function optionsComponent({ options }) {
     const trigger = t.button(
         {
             className: "btn borderless options-kebab-trigger",
-            onclick: (e) => {
+            onclick: () => {
                data.open = !data.open;
                 setTimeout(() => {
                     document.addEventListener("click", onDocumentClick, { once: true });
