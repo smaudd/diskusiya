@@ -17,7 +17,7 @@ export default function optionsComponent({ options }) {
         {
             className: "btn borderless options-kebab-trigger",
             onclick: (e) => {
-                data.open = !data.open;
+               data.open = !data.open;
                 setTimeout(() => {
                     document.addEventListener("click", onDocumentClick, { once: true });
                 });
