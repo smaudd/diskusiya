@@ -36,7 +36,7 @@ export default function discussion(route) {
                     if (data?.discussion?.expand.user.id === pb?.authStore?.record?.id) {
                         data.isOwner = true;
                     }
-                    meta({ title: data.discussion?.title })
+                    meta({ title: data.discussion?.title });
                 },
                 rid: data.discussion?.slug,
                 className: "flex flex-col gap-xl mt-xl",

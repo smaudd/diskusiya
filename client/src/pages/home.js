@@ -123,7 +123,7 @@ export default function home() {
                     data.totalPages = res.totalPages;
                     data.discussions = res.discussions;
                     data.totalItems = res.totalItems;
-                    meta({ title: $("Page (%%)", data.page) })
+                    meta({ title: $("Page (%%)", data.page) });
                 },
             },
             t.div({ className: "discussions-header" }, [

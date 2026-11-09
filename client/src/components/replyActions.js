@@ -34,7 +34,7 @@ export default function replyActions({ isOwner, onReply, onEdit, onDelete, delet
         }
     }
     const opts = options({
-        options: actions
+        options: actions,
     });
 
     return t.div({ className: "flex gap-md justify-end" }, [replyAction, opts]);

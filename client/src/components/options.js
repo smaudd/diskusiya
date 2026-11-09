@@ -17,18 +17,21 @@ export default function optionsComponent({ options }) {
         {
             className: "btn borderless options-kebab-trigger",
             onclick: () => {
-               data.open = !data.open;
+                data.open = !data.open;
                 setTimeout(() => {
                     document.addEventListener("click", onDocumentClick, { once: true });
                 });
             },
         },
-        () => data.open ? $("Less") : $("More"),
+        () => (data.open ? $("Less") : $("More")),
         () =>
             t.div(
                 { className: `options-kebab-list${data.open ? " open" : ""}` },
                 options.map((option) =>
-                    t.button({ ...option.attrs, className: "btn borderless" }, option.value),
+                    t.button(
+                        { ...option.attrs, className: "btn borderless" },
+                        option.value,
+                    ),
                 ),
             ),
     );

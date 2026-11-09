@@ -117,12 +117,11 @@ export default function settings() {
                 }
             }
             if (type === "email") {
-                console.log('hola?')
+                console.log("hola?");
                 const [{ value: email }] = e.target.elements;
                 try {
                     await pb.collection(collections.users).requestEmailChange(email);
                     toasts.info($("%% request change sent", $("email")));
-
                 } catch (err) {
                     console.log(err);
                     toasts.error(
