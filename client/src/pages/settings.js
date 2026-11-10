@@ -119,7 +119,6 @@ export default function settings() {
                 }
             }
             if (type === "email") {
-                console.log("hola?");
                 const [{ value: email }] = e.target.elements;
                 try {
                     await pb.collection(collections.users).requestEmailChange(email);
