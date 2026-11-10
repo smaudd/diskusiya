@@ -29,14 +29,25 @@
         width: 2rem;
         height: 2rem;
         object-fit: contain;
+    }
+    .avatar-imageless {
+        text-transform: uppercase;
+        width: 2rem;
+        height: 2rem;
         border-radius: 100%;
+        border: var(--border-1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: var(--text-sm);
+        font-weight: bold;
     }
 }
 
 .discussions-header {
     display: flex;
     gap: var(--md);
-    flex-direction: column;
+    flex-direction: row;
     h1 {
         display: flex;
         gap: var(--md);

@@ -1,0 +1,6 @@
+.quote {
+    padding: var(--md);
+    border-left: var(--border-1);
+    font-weight: bold;
+    font-style: italic;
+}

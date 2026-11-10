@@ -16,10 +16,14 @@ import {
 } from "../services/collections/discussions";
 import { pb } from "../pb";
 import meta from "../services/meta";
+import discussionActions from "../components/discussionActions";
+import reportModal from "../components/reportModal";
+import reportContent from "../services/collections/reports";
 
 export default function discussion(route) {
-    let updateModal = null;
-    let deleteModal = null;
+    let updateModalRef = null;
+    let deleteModalRef = null;
+    let reportModalRef = null;
     const data = store({
         discussion: null,
         replies: [],
@@ -27,6 +31,18 @@ export default function discussion(route) {
         notfound: false,
         isOwner: false,
     });
+
+    function onSubmitReport(e) {
+        e.preventDefault();
+        const [{ value: reason }, { checked: block }] = e.target.elements;
+        reportContent({
+            discussion: data.discussion.id,
+            reason,
+            user: data.reply.expand.user,
+            reporter: pb.authStore.record.id,
+            block,
+        });
+    }
 
     return layout(
         t.div(
@@ -43,24 +59,31 @@ export default function discussion(route) {
             },
             [
                 () => {
-                    if (data.discussion?.id && data.isOwner) {
-                        updateModal = discussionModal({
-                            title: $("Update discussion"),
-                            onSubmitDiscussion: async (e) => {
-                                data.discussion = await updateDiscussion({
-                                    data,
-                                    event: e,
-                                });
-                            },
-                            values: {
-                                title: data.discussion.title,
-                                content: data.discussion.content,
-                            },
+                    if (data.discussion?.id) {
+                        if (data.isOwner) {
+                            updateModalRef = discussionModal({
+                                title: $("Update discussion"),
+                                onSubmitDiscussion: async (e) => {
+                                    data.discussion = await updateDiscussion({
+                                        data,
+                                        event: e,
+                                    });
+                                },
+                                values: {
+                                    title: data.discussion.title,
+                                    content: data.discussion.content,
+                                },
+                            });
+                            deleteModalRef = confirmationModal({
+                                onConfirm: () => deleteDiscussion({ data }),
+                            });
+                        }
+                        reportModalRef = reportModal({
+                            id: "discussion-report-modal",
+                            onSubmitReport,
+                            record: data.discussion,
                         });
-                        deleteModal = confirmationModal({
-                            onConfirm: () => deleteDiscussion({ data }),
-                        });
-                        return [updateModal, deleteModal];
+                        return [updateModalRef, deleteModalRef, reportModalRef];
                     }
                 },
                 () => {
@@ -73,6 +96,13 @@ export default function discussion(route) {
                     return [
                         t.div({ className: "discussions-header" }, [
                             t.h1({}, () => data?.discussion?.title),
+                            discussionActions({
+                                isOwner: data.isOwner,
+                                deleted: false,
+                                onEdit: () => modals.open(updateModalRef),
+                                onDelete: () => modals.open(deleteModalRef),
+                                onReport: () => modals.open(reportModalRef),
+                            }),
                         ]),
                         markdown(data?.discussion?.content),
                         recordMeta({
@@ -80,32 +110,6 @@ export default function discussion(route) {
                             updated: data.discussion?.updated,
                             created: data.discussion?.created,
                         }),
-                        t.div({ className: "flex gap-md justify-end" }, [
-                            () => {
-                                if (data.isOwner) {
-                                    return [
-                                        t.button(
-                                            {
-                                                className: "btn",
-                                                onclick: () => {
-                                                    modals.open(updateModal);
-                                                },
-                                            },
-                                            $("Edit"),
-                                        ),
-                                        t.button(
-                                            {
-                                                className: "btn",
-                                                onclick: () => {
-                                                    modals.open(deleteModal);
-                                                },
-                                            },
-                                            $("Delete"),
-                                        ),
-                                    ];
-                                }
-                            },
-                        ]),
                     ];
                 },
                 () => {

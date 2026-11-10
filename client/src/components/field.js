@@ -8,17 +8,22 @@ export default function field(props, fieldElement, children) {
     delete props.options;
     return t.div(
         { className: `field${className ? ` ${className}` : ""}` },
-        t.label({ "html-for": props.id }, $(props.label)),
-        fieldElement(
-            props,
-            options.length
-                ? options.map((option) =>
-                      t.option(
-                          { value: option.value, selected: option.selected },
-                          option.label,
-                      ),
-                  )
-                : null,
+        t.label(
+            { "html-for": props.id, className: props.type },
+            t.span({}, $(props.label)),
+            [
+                fieldElement(
+                    props,
+                    options.length
+                        ? options.map((option) =>
+                              t.option(
+                                  { value: option.value, selected: option.selected },
+                                  option.label,
+                              ),
+                          )
+                        : null,
+                ),
+            ],
         ),
         children,
     );

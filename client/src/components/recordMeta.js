@@ -17,11 +17,13 @@ export default function recordMeta({ author, created, updated }) {
     }
     return t.div({ className: "record-meta" }, [
         t.div({ className: "flex gap-md items-center" }, [
-            t.img({
-                src: pb.files.getURL(author, author?.avatar, {
-                    thumb: "100x250",
-                }),
-            }),
+            author?.avatar
+                ? t.img({
+                      src: pb.files.getURL(author, author?.avatar, {
+                          thumb: "100x250",
+                      }),
+                  })
+                : t.span({ className: "avatar-imageless" }, author?.name?.slice(0, 2) || ""),
             t.span({ className: "bold" }, () => author?.name),
         ]),
         t.div({ className: "flex gap-md items-center" }, [

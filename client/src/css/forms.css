@@ -4,13 +4,29 @@
     border: var(--border-1);
 
     label {
+        cursor: pointer;
         font-weight: bold;
         padding: var(--md);
         font-size: var(--md);
-        border-bottom: var(--border-1);
         background-color: var(--surface-color);
         display: flex;
+        flex-direction: column;
+        gap: var(--md);
+        span {
+            border-bottom: var(--border-1);
+            padding-bottom: var(--md);
+        }
+    }
+
+    label.checkbox {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         align-items: center;
+        border: none;
+        span {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
     }
 
     input,
@@ -21,14 +37,27 @@
         background-color: var(--surface-color);
         outline: none;
         font-size: var(--lg);
-        padding: var(--md);
         flex: 1;
+        margin: 0;
+    }
+
+    input[type="checkbox"] {
+        appearance: auto;
+        width: 1.2rem;
+        height: 1.2rem;
+        justify-self: flex-end;
+        cursor: pointer;
     }
 }
 
 .field.field-row {
     flex-direction: row;
     label {
-        border: 0;
+        span {
+            padding: 0;
+            border: 0;
+        }
+        align-items: center;
+        flex-direction: row;
     }
 }

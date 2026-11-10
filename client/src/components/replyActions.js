@@ -3,7 +3,14 @@ import { $ } from "../utils/i18n";
 import { pb } from "../pb";
 import options from "./options";
 
-export default function replyActions({ isOwner, onReply, onEdit, onDelete, deleted }) {
+export default function replyActions({
+    isOwner,
+    onReply,
+    onEdit,
+    onDelete,
+    onReport,
+    deleted,
+}) {
     let replyAction = null;
     if (pb.authStore.isValid && onReply && !deleted) {
         replyAction = t.button(
@@ -14,6 +21,7 @@ export default function replyActions({ isOwner, onReply, onEdit, onDelete, delet
             $("Reply"),
         );
     }
+
     const actions = [];
     if (isOwner) {
         if (onEdit && !deleted) {
@@ -32,6 +40,14 @@ export default function replyActions({ isOwner, onReply, onEdit, onDelete, delet
                 value: $("Delete"),
             });
         }
+    }
+    if (pb.authStore.isValid && onReport && !deleted && !isOwner) {
+        actions.push({
+            attrs: {
+                onclick: onReport,
+            },
+            value: $("Report"),
+        });
     }
     const opts = options({
         options: actions,

@@ -138,7 +138,9 @@ export async function updateDiscussion({ data, event }) {
         }
         const item = await pb
             .collection(collections.discussions)
-            .update(data.discussion.id, updates);
+            .update(data.discussion.id, updates, {
+                expand: collections.user,
+            });
         if (shouldRedirect) {
             navigate(`/d/${item.slug}`);
         }

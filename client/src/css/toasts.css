@@ -6,7 +6,6 @@
     position: fixed;
     left: 0;
     pointer-events: none !important;
-    text-transform: capitalize;
     .toast {
         top: 0;
         position: sticky;

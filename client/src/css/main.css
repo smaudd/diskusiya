@@ -9,6 +9,7 @@
 @import "./discussions.css";
 @import "./settings.css";
 @import "./options-kebab.css";
+@import "./components.css";
 
 *,
 *::before,

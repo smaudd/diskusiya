@@ -16,6 +16,8 @@ import {
 import { pb } from "../pb";
 import toast from "./toast";
 import replyBlock from "./replyBlock";
+import reportModal from "./reportModal";
+import reportContent from "../services/collections/reports";
 
 // TODO: Add pagination to replies
 export default function replyList({ discussionId }) {
@@ -70,10 +72,10 @@ export default function replyList({ discussionId }) {
     }
     watch(
         () => {
-            data.focus;
+            return [data.focus, data.mode];
         },
         () => {
-            // get latest reply
+            // focus
             setTimeout(() => {
                 if (data.focus) {
                     const el = document.getElementById(`reply-${data.focus}`);
@@ -84,8 +86,34 @@ export default function replyList({ discussionId }) {
                 }
                 data.focus = null;
             });
+
+            // check reports
+            if (data.mode === "report") {
+                modals.open(reportModalRef);
+                reportModalRef.onafterclose = clearReportModal;
+            }
         },
     );
+
+    let reportModalRef;
+
+    function clearReportModal() {
+        data.reply = null;
+        data.mode = null;
+    }
+
+    function onSubmitReport(e) {
+        e.preventDefault();
+        const [{ value: reason }, { checked: block }] = e.target.elements;
+        reportContent({
+            reply: data.reply.id,
+            reason,
+            user: data.reply.expand.user,
+            reporter: pb.authStore.record.id,
+            block,
+        });
+        clearReportModal();
+    }
 
     return t.div(
         {
@@ -106,6 +134,20 @@ export default function replyList({ discussionId }) {
                 },
             });
             return deleteModal;
+        },
+        () => {
+            if (data.reply && data.mode === "report") {
+                reportModalRef = reportModal({
+                    id: "reply-report-modal",
+                    onSubmitReport,
+                    record: data.reply,
+                    onClose: () => {
+                        data.reply = null;
+                        data.mode = null;
+                    },
+                });
+                return reportModalRef;
+            }
         },
         () => {
             if (data.loading) {
@@ -140,6 +182,10 @@ export default function replyList({ discussionId }) {
                                                     "update",
                                                     subreply,
                                                 ),
+                                                onReport: () => {
+                                                    data.reply = subreply;
+                                                    data.mode = "report";
+                                                },
                                                 onDelete: () => {
                                                     data.reply = subreply;
                                                     data.mode = "delete";
@@ -151,7 +197,9 @@ export default function replyList({ discussionId }) {
                                                 id: "subreply-form",
                                                 show:
                                                     data.reply?.id === subreply?.id &&
-                                                    data.mode !== "delete",
+                                                    ["update", "create"].includes(
+                                                        data.mode,
+                                                    ),
                                                 onSubmitReply,
                                                 reply,
                                                 value: data.currentReplyContent,
@@ -178,6 +226,10 @@ export default function replyList({ discussionId }) {
                                     data.mode = "delete";
                                     modals.open(deleteModal);
                                 },
+                                onReport: () => {
+                                    data.reply = reply;
+                                    data.mode = "report";
+                                },
                                 deleted: reply.deleted,
                             }),
                             () => {
@@ -185,7 +237,7 @@ export default function replyList({ discussionId }) {
                                     id: "reply-form",
                                     show:
                                         data.reply?.id == reply.id &&
-                                        data.mode !== "delete",
+                                        ["update", "create"].includes(data.mode),
                                     onSubmitReply,
                                     reply,
                                     value: data.currentReplyContent,
@@ -197,7 +249,6 @@ export default function replyList({ discussionId }) {
                                         data.mode === "update"
                                             ? $("Update")
                                             : $("Submit"),
-                                    onCancel: onCancelReply,
                                 });
                             },
                         ],
