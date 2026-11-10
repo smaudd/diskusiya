@@ -4,6 +4,8 @@ import { $ } from "../utils/i18n";
 import toasts from "../components/toast";
 import field from "../components/field";
 import meta from "../services/meta";
+import { pb } from "../pb";
+import { navigate } from "../utils/navigation";
 
 export default function register() {
     async function onSubmit(e) {
@@ -20,7 +22,9 @@ export default function register() {
                 password,
                 passwordConfirm,
             });
-            await pb.collection("users").authWithPassword(email, password);
+            await pb
+                .collection("users")
+                .authWithPassword(email, password, { expand: "blocks_via_owner" });
             if (pb.authStore.isValid) {
                 toasts.info($("Welcome!"));
                 navigate("/");

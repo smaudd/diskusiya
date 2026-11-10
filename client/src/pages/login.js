@@ -5,13 +5,16 @@ import toasts from "../components/toast";
 import { pb } from "../pb";
 import field from "../components/field";
 import { navigate } from "../utils/navigation";
+import meta from "../services/meta";
 
 export default function login() {
     async function onSubmit(e) {
         e.preventDefault();
         const [{ value: email }, { value: password }] = e.target.elements;
         try {
-            await pb.collection("users").authWithPassword(email, password);
+            await pb
+                .collection("users")
+                .authWithPassword(email, password, { expand: "blocks_via_owner" });
             if (pb.authStore.isValid) {
                 toasts.info($("Welcome back!"));
                 navigate("/");
