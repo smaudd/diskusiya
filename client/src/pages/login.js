@@ -6,6 +6,7 @@ import { pb } from "../pb";
 import field from "../components/field";
 import { navigate } from "../utils/navigation";
 import meta from "../services/meta";
+import { userQueryParameters } from "../services/collections/config";
 
 export default function login() {
     async function onSubmit(e) {
@@ -14,7 +15,7 @@ export default function login() {
         try {
             await pb
                 .collection("users")
-                .authWithPassword(email, password, { expand: "blocks_via_owner" });
+                .authWithPassword(email, password, userQueryParameters);
             if (pb.authStore.isValid) {
                 toasts.info($("Welcome back!"));
                 navigate("/");

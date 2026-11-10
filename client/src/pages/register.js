@@ -6,25 +6,31 @@ import field from "../components/field";
 import meta from "../services/meta";
 import { pb } from "../pb";
 import { navigate } from "../utils/navigation";
+import { userQueryParameters } from "../services/collections/config";
 
 export default function register() {
     async function onSubmit(e) {
         e.preventDefault();
-        const [{ value: email }, { value: password }, { value: passwordConfirm }] =
-            e.target.elements;
+        const [
+            { value: email },
+            { value: name },
+            { value: password },
+            { value: passwordConfirm },
+        ] = e.target.elements;
         if (password !== passwordConfirm) {
             toasts.error($("Passwords doens't match, try again"));
             return;
         }
         try {
             await pb.collection("users").create({
+                name,
                 email,
                 password,
                 passwordConfirm,
             });
             await pb
                 .collection("users")
-                .authWithPassword(email, password, { expand: "blocks_via_owner" });
+                .authWithPassword(email, password, userQueryParameters);
             if (pb.authStore.isValid) {
                 toasts.info($("Welcome!"));
                 navigate("/");
@@ -41,11 +47,21 @@ export default function register() {
         { className: "flex flex-col gap-md", onsubmit: onSubmit },
         field(
             {
-                label: $("Username"),
-                placeholder: $("Enter your username or email"),
+                label: $("Email"),
+                placeholder: $("Enter your email"),
                 required: true,
-                name: "username",
-                "html-autocomplete": "username",
+                name: "email",
+                "html-autocomplete": "email",
+            },
+            t.input,
+        ),
+        field(
+            {
+                label: $("Name"),
+                placeholder: $("Enter your name (prioritize an alias)"),
+                required: true,
+                name: "name",
+                "html-autocomplete": "name",
             },
             t.input,
         ),
