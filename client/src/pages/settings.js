@@ -11,6 +11,7 @@ import { flushAll } from "../services/collections/discussions";
 import meta from "../services/meta";
 import emailResetModal from "../components/emailResetModal";
 import modal from "../components/modal";
+import avatar from "../components/avatar";
 
 export default function settings() {
     const data = store({
@@ -155,15 +156,9 @@ export default function settings() {
         { className: "settings-form", onsubmit: onSubmitAvatar },
         t.div({ className: "avatar-block" }, [
             () => {
-                return t.img({
-                    src: data.previewAvatar
-                        ? data.avatar
-                        : pb.files.getURL(pb.authStore.record, data.avatar, {
-                              thumb: "100x250",
-                          }),
-                    id: "avatar-image",
-                    className: "avatar-image",
-                    rid: data.avatar,
+                return avatar({
+                    author: pb.authStore.record,
+                    src: data.previewAvatar && data.avatar,
                 });
             },
             field(

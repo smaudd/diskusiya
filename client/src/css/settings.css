@@ -2,6 +2,7 @@
     width: 4rem;
     height: 4rem;
     border-radius: 100%;
+    aspect-ratio: 1;
 }
 
 .settings-form {
@@ -19,10 +20,19 @@
     .avatar-block {
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: var(--md);
         label,
         input {
-            padding: var(--md) 0;
+            padding: 0;
+            span {
+                padding: var(--sm);
+            }
+        }
+        .avatar-imageless {
+            width: 4rem;
+            height: 4rem;
+            aspect-ratio: 1;
         }
     }
     @media screen and (min-width: 768px) {

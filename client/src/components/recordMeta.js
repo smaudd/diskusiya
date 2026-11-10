@@ -1,6 +1,7 @@
 import { t } from "shablon";
 import { $ } from "../utils/i18n";
-import { pb } from "../pb";
+import avatar from "./avatar";
+
 
 function formatDate(date) {
     return `${date.toLocaleDateString().slice(0, 5)}@${date.toLocaleTimeString().slice(0, 5)}`;
@@ -17,16 +18,7 @@ export default function recordMeta({ author, created, updated }) {
     }
     return t.div({ className: "record-meta" }, [
         t.div({ className: "flex gap-md items-center" }, [
-            author?.avatar
-                ? t.img({
-                      src: pb.files.getURL(author, author?.avatar, {
-                          thumb: "100x250",
-                      }),
-                  })
-                : t.span(
-                      { className: "avatar-imageless" },
-                      author?.name?.slice(0, 2) || "",
-                  ),
+            avatar({ author }),
             t.span({ className: "bold" }, () => author?.name),
         ]),
         t.div({ className: "flex gap-md items-center" }, [
