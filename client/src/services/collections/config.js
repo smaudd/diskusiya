@@ -4,9 +4,9 @@ export const collections = {
     reports: "reports",
     users: "users",
     user: "user",
-    blocks: "blocks"
+    blocks: "blocks",
 };
 
 export const userQueryParameters = {
-    expand: "blocks_via_owner"
-}
+    expand: "blocks_via_owner",
+};

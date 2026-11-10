@@ -6,7 +6,7 @@ import recordMeta from "./recordMeta";
 import field from "./field";
 
 export default function reportModal({ id, onSubmitReport, record }) {
-    if (!record && !record?.expand?.user) return null
+    if (!record && !record?.expand?.user) return null;
     return t.div(
         {
             className: "modal",

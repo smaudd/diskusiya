@@ -18,7 +18,7 @@ export default function settings() {
         previewAvatar: false,
     });
 
-    console.log(pb.authStore.record)
+    console.log(pb.authStore.record);
 
     async function onSubmitLanguage(e) {
         e.preventDefault();

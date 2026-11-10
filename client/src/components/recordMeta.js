@@ -23,7 +23,10 @@ export default function recordMeta({ author, created, updated }) {
                           thumb: "100x250",
                       }),
                   })
-                : t.span({ className: "avatar-imageless" }, author?.name?.slice(0, 2) || ""),
+                : t.span(
+                      { className: "avatar-imageless" },
+                      author?.name?.slice(0, 2) || "",
+                  ),
             t.span({ className: "bold" }, () => author?.name),
         ]),
         t.div({ className: "flex gap-md items-center" }, [
