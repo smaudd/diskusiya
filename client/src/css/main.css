@@ -10,6 +10,7 @@
 @import "./settings.css";
 @import "./options-kebab.css";
 @import "./components.css";
+@import "./tabs.css";
 
 *,
 *::before,

@@ -1,0 +1,23 @@
+.tabs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md);
+    border: var(--border-1);
+    background-color: var(--surface-color);
+    .tabs-header {
+        display: flex;
+        background-color: var(--secondary-color);
+        .tab {
+            transition: background-color 0.5s;
+            background-color: var(--secondary-color);
+            border: 0;
+        }
+        .tab[data-active="true"] {
+            background-color: var(--primary-color);
+        }
+    }
+    .tab-content {
+        padding: var(--md);
+    }
+    
+}
