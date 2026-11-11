@@ -1,8 +1,8 @@
 import { store, t } from "shablon";
 
-export default function tabsComponent({ defaultTab, tabs }) {
+export default function tabsComponent({ id, defaultTab, tabs }) {
     const data = store({
-        currentTab: defaultTab,
+        currentTab: localStorage.getItem(`tabs[${id}]`) || defaultTab,
     });
 
     return t.div(
@@ -17,7 +17,10 @@ export default function tabsComponent({ defaultTab, tabs }) {
                     {
                         className: "tab btn",
                         "html-data-active": () => data.currentTab === tab.id,
-                        onclick: () => (data.currentTab = tab.id),
+                        onclick: () => {
+                            data.currentTab = tab.id;
+                            localStorage.setItem(`tabs[${id}]`, tab.id);
+                        },
                     },
                     tab.label,
                 ),
