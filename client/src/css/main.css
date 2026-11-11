@@ -21,6 +21,7 @@
 }
 
 body {
+    min-height: 100dvh;
     margin: 0;
     padding: var(--xl);
 }
@@ -62,7 +63,8 @@ a[aria-disabled="true"] {
 }
 
 .page {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: var(--xl);
     max-width: var(--max-container-width);
     margin: 0 auto;

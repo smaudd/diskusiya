@@ -1,8 +1,9 @@
 import { store, t } from "shablon";
 
 export default function tabsComponent({ id, defaultTab, tabs }) {
+    const savedTab = localStorage.getItem(`tabs[${id}]`)
     const data = store({
-        currentTab: localStorage.getItem(`tabs[${id}]`) || defaultTab,
+        currentTab: tabs.some(tab => tab.id === savedTab) && savedTab || defaultTab,
     });
 
     return t.div(
