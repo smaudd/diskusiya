@@ -1,0 +1,10 @@
+.table {
+    li {
+        display: flex;
+        align-items: center;
+        gap: var(--xl);
+    }
+    .row-data {
+        flex: 1;
+    }
+}

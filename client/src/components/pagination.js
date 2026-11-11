@@ -2,7 +2,7 @@ import { t, watch } from "shablon";
 import { $ } from "../utils/i18n";
 import meta from "../services/meta";
 
-export default function pagination({ data }) {
+export default function pagination({ data, collection = "" }) {
     const params = new URLSearchParams(window.location.search);
     params.delete("page");
 
@@ -19,14 +19,14 @@ export default function pagination({ data }) {
         // first page
         t.a(
             {
-                href: `/?page=1${paramsString}`,
+                href: `/${collection}?page=1${paramsString}`,
                 ariaDisabled: data.page <= 1,
             },
             $("<<"),
         ),
         t.a(
             {
-                href: `/?page=${+data.page - 1}${paramsString}`,
+                href: `/${collection}?page=${+data.page - 1}${paramsString}`,
                 ariaDisabled: data.page === 1,
             },
             $("<"),
@@ -37,7 +37,7 @@ export default function pagination({ data }) {
         () =>
             t.a(
                 {
-                    href: `/?page=${+data.page + 1}${paramsString}`,
+                    href: `/${collection}?page=${+data.page + 1}${paramsString}`,
                     ariaDisabled: data.page >= data.totalPages,
                 },
                 $(">"),
@@ -45,7 +45,7 @@ export default function pagination({ data }) {
         () =>
             t.a(
                 {
-                    href: `/?page=${data.totalPages}${paramsString}`,
+                    href: `/${collection}?page=${data.totalPages}${paramsString}`,
                     ariaDisabled: data.page === data.totalPages,
                 },
                 $(">>"),

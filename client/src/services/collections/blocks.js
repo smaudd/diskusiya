@@ -5,34 +5,24 @@ import { collections, userQueryParameters } from "./config";
 
 export async function blockUser(user) {
     try {
-        await pb
-            .collection(collections.blocks)
-            .create({
-                owner: pb.authStore.record.id,
-                blocking: user.id
-            });
+        await pb.collection(collections.blocks).create({
+            owner: pb.authStore.record.id,
+            blocking: user.id,
+        });
         await pb.collection(collections.users).authRefresh(userQueryParameters);
     } catch (err) {
-        console.log(err)
+        console.log(err);
         toast.error($("We had a problem blocking this user"));
     }
 }
 
-export async function unblockUser(user) {
+export async function unblockUser(blockId) {
     try {
-        const filteredBlocks = pb.authStore.record.expand.blocks_via_owner.blocks.filter(
-            (block) => block === user.id,
-        );
-        if (blocksInPlace.includes(user.id)) {
-            return;
-        }
-        await pb
-            .collection(collections.blocks)
-            .update(pb.authStore.record.expand.blocks_via_owner.id, {
-                blocks: filteredBlocks,
-            });
+        await pb.collection(collections.blocks).delete(blockId);
         await pb.collection(collections.users).authRefresh(userQueryParameters);
+        toast.info($("User successfully unblocked"));
     } catch (err) {
-        toast.error($("We had a problem blocking this user"));
+        console.log(err);
+        toast.error($("We had a problem unblocking this user"));
     }
 }
