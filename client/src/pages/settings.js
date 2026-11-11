@@ -7,9 +7,8 @@ import generalSettings from "../components/generalSettings";
 import blockedUsers from "../components/blockedUsers";
 
 export default function settings() {
- 
     meta({ title: $("Settings") });
-  
+
     return layout(
         t.h1({}, $("Settings")),
         t.div({ className: "flex flex-col gap-md", rid: "never" }, [
@@ -20,48 +19,13 @@ export default function settings() {
                     {
                         id: "general",
                         label: $("General"),
-                        content: generalSettings()
+                        content: generalSettings(),
                     },
                     {
-                        id: "blocks1",
+                        id: "blocks",
                         label: $("Blocked users"),
-                        content: blockedUsers()
+                        content: blockedUsers(),
                     },
-                     {
-                        id: "blocks2",
-                        label: $("Blocked users"),
-                        content: blockedUsers()
-                    },
-                     {
-                        id: "blocks3",
-                        label: $("Blocked users"),
-                        content: blockedUsers()
-                    },
-                     {
-                        id: "blocks4",
-                        label: $("Blocked users"),
-                        content: blockedUsers()
-                    },
-                     {
-                        id: "blocks5",
-                        label: $("Blocked users"),
-                        content: blockedUsers()
-                    },
-                     {
-                        id: "blocks6",
-                        label: $("Blocked users"),
-                        content: blockedUsers()
-                    },
-                     {
-                        id: "blocks7",
-                        label: $("Blocked users"),
-                        content: blockedUsers()
-                    },
-                     {
-                        id: "blocks8",
-                        label: $("Blocked users"),
-                        content: blockedUsers()
-                    }
                 ],
             }),
         ]),

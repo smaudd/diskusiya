@@ -56,5 +56,5 @@ export default function replyActions({
         options: actions,
     });
 
-    return t.div({ className: "flex gap-md justify-end" }, [replyAction, opts]);
+    return t.div({ className: "flex gap-md justify-end mt-md" }, [replyAction, opts]);
 }

@@ -41,5 +41,5 @@ export default function discussionActions({
         options: actions,
     });
 
-    return t.div({ className: "flex gap-md justify-end" }, opts);
+    return t.div({ className: "flex gap-md justify-end mt-md" }, opts);
 }

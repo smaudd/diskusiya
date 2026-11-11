@@ -36,7 +36,7 @@ export default function replyForm({
                             t.textarea,
                         ),
                     ]),
-                t.div({ className: "flex gap-md justify-end" }, [
+                t.div({ className: "flex gap-md justify-end mt-md" }, [
                     t.button(
                         { className: "btn borderless", type: "submit" },
                         submitLabel,

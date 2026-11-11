@@ -1,9 +1,7 @@
 import { t, store, watch } from "shablon";
-import recordMeta from "./recordMeta";
 import sort from "./sort";
 import replyActions from "./replyActions";
 import replyForm from "./replyForm";
-import markdown from "./markdown";
 import { navigate } from "../utils/navigation";
 import { $ } from "../utils/i18n";
 import modals from "./modal";
@@ -166,55 +164,50 @@ export default function replyList({ discussionId }) {
                         [
                             replyBlock({ reply, className: "reply" }),
                             reply?.expand?.replies_via_replyingTo?.map((subreply) =>
-                                t.div(
-                                    {},
-                                    replyBlock(
-                                        {
-                                            reply: subreply,
-                                            className: "reply subreply",
-                                        },
-                                        [
-                                            replyActions({
-                                                isOwner:
-                                                    pb?.authStore?.record?.id ===
-                                                    subreply?.user,
-                                                onEdit: onReplyCreateOrUpdate(
-                                                    "update",
-                                                    subreply,
-                                                ),
-                                                onReport: () => {
-                                                    data.reply = subreply;
-                                                    data.mode = "report";
-                                                },
-                                                onDelete: () => {
-                                                    data.reply = subreply;
-                                                    data.mode = "delete";
-                                                    modals.open(deleteModal);
-                                                },
-                                                deleted: subreply.deleted,
-                                            }),
-                                            replyForm({
-                                                id: "subreply-form",
-                                                show:
-                                                    data.reply?.id === subreply?.id &&
-                                                    ["update", "create"].includes(
-                                                        data.mode,
-                                                    ),
-                                                onSubmitReply,
-                                                reply,
-                                                value: data.currentReplyContent,
-                                                fieldLabel:
-                                                    data.mode === "update"
-                                                        ? $("Update reply")
-                                                        : $("Reply"),
-                                                submitLabel:
-                                                    data.mode === "update"
-                                                        ? $("Update")
-                                                        : $("Submit"),
-                                                onCancel: onCancelReply,
-                                            }),
-                                        ],
-                                    ),
+                                replyBlock(
+                                    {
+                                        reply: subreply,
+                                        className: "reply subreply",
+                                    },
+                                    [
+                                        replyActions({
+                                            isOwner:
+                                                pb?.authStore?.record?.id ===
+                                                subreply?.user,
+                                            onEdit: onReplyCreateOrUpdate(
+                                                "update",
+                                                subreply,
+                                            ),
+                                            onReport: () => {
+                                                data.reply = subreply;
+                                                data.mode = "report";
+                                            },
+                                            onDelete: () => {
+                                                data.reply = subreply;
+                                                data.mode = "delete";
+                                                modals.open(deleteModal);
+                                            },
+                                            deleted: subreply.deleted,
+                                        }),
+                                        replyForm({
+                                            id: "subreply-form",
+                                            show:
+                                                data.reply?.id === subreply?.id &&
+                                                ["update", "create"].includes(data.mode),
+                                            onSubmitReply,
+                                            reply,
+                                            value: data.currentReplyContent,
+                                            fieldLabel:
+                                                data.mode === "update"
+                                                    ? $("Update reply")
+                                                    : $("Reply"),
+                                            submitLabel:
+                                                data.mode === "update"
+                                                    ? $("Update")
+                                                    : $("Submit"),
+                                            onCancel: onCancelReply,
+                                        }),
+                                    ],
                                 ),
                             ),
                             replyActions({

@@ -24,6 +24,9 @@
         }
     }
     .tab-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--md);
         padding: var(--md);
         flex-grow: 1;
         flex: 1;
