@@ -1,20 +1,19 @@
 import toast from "../../components/toast";
 import { pb } from "../../pb";
+import { $ } from "../../utils/i18n";
 import { collections, userQueryParameters } from "./config";
 
 export async function blockUser(user) {
     try {
-        const blocksInPlace = pb.authStore.record.expand.blocks_via_owner.blocks;
-        if (blocksInPlace.includes(user.id)) {
-            return;
-        }
         await pb
             .collection(collections.blocks)
-            .update(pb.authStore.record.expand.blocks_via_owner.id, {
-                blocks: [...blocksInPlace, user.id],
+            .create({
+                owner: pb.authStore.record.id,
+                blocking: user.id
             });
         await pb.collection(collections.users).authRefresh(userQueryParameters);
     } catch (err) {
+        console.log(err)
         toast.error($("We had a problem blocking this user"));
     }
 }

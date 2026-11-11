@@ -12,6 +12,9 @@ export default function replyActions({
     deleted,
 }) {
     let replyAction = null;
+    if (deleted) {
+        return null
+    }
     if (pb.authStore.isValid && onReply && !deleted) {
         replyAction = t.button(
             {

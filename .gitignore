@@ -24,9 +24,7 @@ dist-ssr
 *.sw?
 
 pb_data
-pb_hooks
 pb_public
 .env
 pocketbase
-
 pbsource
