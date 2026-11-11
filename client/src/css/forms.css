@@ -16,6 +16,7 @@
             border-bottom: var(--border-1);
             padding-bottom: var(--md);
         }
+        -webkit-tap-highlight-color: transparent;
     }
 
     label.checkbox {
