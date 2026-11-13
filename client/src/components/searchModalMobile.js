@@ -13,7 +13,7 @@ export default function searchModalMobile({ onSearch, search }) {
                 {
                     id: "search-form",
                     role: "search",
-                    className: "discussions-search",
+                    className: "discussions-search modal-content",
                     onsubmit: onSearch,
                 },
                 [

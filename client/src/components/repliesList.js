@@ -203,7 +203,7 @@ export default function replyList({ metaTitle, route, discussionId }, actions) {
                 return t.span({}, $("Loading..."));
             }
             if (data.replies.length === 0) {
-                return t.div({ className: "empty-replies" }, $("Be the first one to join this conversation"));
+                return t.div({ className: "empty-results" }, $("Be the first one to join this conversation"));
             }
             return t.div(
                 {

@@ -10,8 +10,8 @@ export default function settings() {
     meta({ title: $("Settings") });
 
     return layout(
-        t.h1({}, $("Settings")),
-        t.div({ className: "flex flex-col gap-md", rid: "never" }, [
+        t.div({ className: "content-container", rid: "never" }, [
+            t.h1({}, $("Settings")),
             tabs({
                 id: "settings-tabs",
                 defaultTab: "general",

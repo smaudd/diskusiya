@@ -40,12 +40,12 @@ export default function home() {
         ]);
     }
 
-    function onClearSearch() {
+    async function onClearSearch() {
         data.search = "";
         navigateQueryParam([
             {
                 name: "search",
-                value: data.search,
+                value: "",
             },
             {
                 name: "page",
@@ -120,7 +120,7 @@ export default function home() {
             {
                 onmount: async () => {
                     const res = await getDiscussions({ data });
-                    if (res.totalPages < data.page) {
+                    if (res.totalPages < data.page && !data.search) {
                         navigateQueryParam([
                             {
                                 name: "page",
@@ -192,7 +192,7 @@ export default function home() {
                         title: $("No results found for '%%'", data.search),
                     });
                 }
-                return t.span({}, $("Create your first discussion"));
+                return t.div({ className: "empty-results" }, $("Create your first discussion"));
             }
             return t.div({}, [
                 () => {

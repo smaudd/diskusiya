@@ -12,4 +12,5 @@ export function navigateQueryParam(paramsList) {
         "",
         decodeURIComponent(`${window.location.pathname}?${params}`),
     );
+    console.log('boom')
 }

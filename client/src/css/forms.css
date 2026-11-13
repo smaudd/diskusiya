@@ -83,8 +83,17 @@
         padding: 0;
         background-color: transparent;
         border: 0;
+        position: relative;
         select {
+            font: var(--sans);
+            font-size: var(--text-base);
             background-color: transparent;
         }
+    }
+    label[for="sort"]::after {
+        content: "↓";
+        position: absolute;
+        right: calc(-1 * var(--text-base));
+        color: var(--text-color);
     }
 }

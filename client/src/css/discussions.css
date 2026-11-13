@@ -130,13 +130,18 @@
     }
 }
 
-.clear-filters, .empty-replies {
+.clear-filters, .empty-results {
     padding: var(--md);
     display: flex;
     gap: var(--md);
+    font-family: var(--font);
     justify-content: space-between;
     align-items: center;
     background-color: var(--surface-color);
+}
+
+.empty-results  {
+    font-size: var(--text-md);
 }
 
 .discussions-filters {

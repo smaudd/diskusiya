@@ -187,7 +187,7 @@ export default function generalSettings() {
         languageForm,
         avatarForm,
         emailResetModalRef,
-        t.div({ className: "flex flex-col gap-md" }, [
+        t.div({ className: "content-container" }, [
             t.button(
                 {
                     className: "btn",

@@ -6,15 +6,17 @@
 
 .settings-form {
     background-color: var(--surface-color);
-    border: var(--border-1);
     display: flex;
+    padding: var(--md);
     gap: var(--md);
     flex-direction: column;
-    padding: var(--md);
     .field {
         width: 100%;
         border: 0;
         padding: 0;
+    }
+    .btn {
+        background-color: transparent;
     }
     .avatar-block {
         display: flex;
