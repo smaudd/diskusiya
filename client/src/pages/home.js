@@ -18,7 +18,7 @@ export default function home() {
     const data = store({
         discussions: [],
         search: searchParams.get("search") || "",
-        sort: searchParams.get("sort") || "-updated",
+        sort: searchParams.get("sort") || "-created",
         page: +searchParams.get("page") || 1, // if page is forced to 0 it will evaluate false and always render page 1
         totalItems: null,
         limit: 3,
@@ -103,7 +103,7 @@ export default function home() {
     }
 
     function clearFiltersBlock({ title }) {
-        return t.div({ className: "flex gap-md items-center" }, [
+        return t.div({ className: "clear-filters" }, [
             t.span({ className: "flex-1" }, title),
             t.button(
                 {
@@ -120,55 +120,68 @@ export default function home() {
             {
                 onmount: async () => {
                     const res = await getDiscussions({ data });
+                    if (res.totalPages < data.page) {
+                        navigateQueryParam([
+                            {
+                                name: "page",
+                                value: 1,
+                            },
+                        ]);
+                        return;
+                    }
                     data.totalPages = res.totalPages;
                     data.discussions = res.discussions;
                     data.totalItems = res.totalItems;
                     meta({ title: $("Page (%%)", data.page) });
                 },
+                className: "content-container"
             },
             t.div({ className: "discussions-header" }, [
                 t.h1({}, () => [
                     t.span({}, $("Discussions")),
                     data.totalItems ? t.span({}, `(${data.totalItems})`) : null,
                 ]),
+                t.div({ className: "discussions-filters" }, [
+                    t.form(
+                        {
+                            role: "search",
+                            className: "discussions-search-md",
+                            onsubmit: onSearch,
+                        },
+                        [
+                            t.div({ className: "field field-row w-full" }, [
+                                t.input({
+                                    placeholder: $("Search"),
+                                    type: "search",
+                                    value: data.search,
+                                    oninput: onSearchInput,
+                                    name: "search",
+                                    id: "search",
+                                }),
+                                t.button(
+                                    { type: "submit", className: "btn" },
+                                    $("Search"),
+                                ),
+                            ]),
+                        ],
+                    ),
+                    sort({
+                        onSortChange,
+                        data,
+                    }),
+                    t.button(
+                        {
+                            className: "btn discussions-search",
+                            onclick: () => {
+                                modals.open(searchDiscussionModal);
+                            },
+                        },
+                        $("Search"),
+                    ),
+                ]),
             ]),
         ),
         searchDiscussionModal,
-        t.div({ className: "discussions-filters" }, [
-            t.form(
-                {
-                    role: "search",
-                    className: "discussions-search-md",
-                    onsubmit: onSearch,
-                },
-                [
-                    t.div({ className: "field field-row w-full" }, [
-                        t.input({
-                            placeholder: $("Search"),
-                            type: "search",
-                            value: data.search,
-                            oninput: onSearchInput,
-                            name: "search",
-                            id: "search",
-                        }),
-                        t.button({ type: "submit", className: "btn" }, $("Search")),
-                    ]),
-                ],
-            ),
-            sort({
-                onSortChange,
-                data,
-            }),
-            t.button(
-                {
-                    className: "btn discussions-search",
-                    onclick: () => {
-                        modals.open(searchDiscussionModal);
-                    },
-                },
-                $("Search"),
-            ),
-        ]),
         t.div({ className: "flex flex-col gap-md", rid: data.discussions }, () => {
             if (data.loading) {
                 return loader();

@@ -6,20 +6,20 @@ export default function sort({ onSortChange, data }) {
     return field(
         {
             id: "sort",
-            className: "field-row",
-            label: $("Sort"),
+            className: "field-row borderless",
+            label: null,
             placeholder: $("Sort"),
             onchange: onSortChange,
             options: [
                 {
                     label: $("Latetst"),
-                    value: "-updated",
-                    selected: data.sort === "-updated",
+                    value: "-created",
+                    selected: data.sort === "-created",
                 },
                 {
                     label: $("Oldest"),
-                    value: "updated",
-                    selected: data.sort === "updated",
+                    value: "created",
+                    selected: data.sort === "created",
                 },
             ],
         },

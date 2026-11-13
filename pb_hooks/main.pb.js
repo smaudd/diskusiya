@@ -6,3 +6,24 @@ onRecordAfterCreateSuccess((e) => {
   $app.save(record);
   e.next();
 }, "users");
+
+
+onRecordDelete((e) => {
+    const replyId = e.record.id;
+
+    const records = $app.findRecordsByFilter(
+        "replies",
+        "replyingTo = {:replyId}",
+        "",
+        0,
+        0,
+        { replyId }
+    );
+
+    for (const record of records) {
+        record.set("replyingToDeleted", true);
+        $app.save(record);
+    }
+
+    e.next();
+}, "replies");

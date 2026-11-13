@@ -32,7 +32,7 @@ export default function searchModalMobile({ onSearch, search }) {
         t.footer({ className: "modal-footer" }, [
             t.button(
                 // TODO: Not sure how this usage works here but it does
-                { className: "btn borderless", onclick: () => modals.close(this) },
+                { className: "btn", onclick: () => modals.close(this) },
                 $("Cancel"),
             ),
             t.button({ className: "btn", "html-form": "search-form" }, $("Search")),

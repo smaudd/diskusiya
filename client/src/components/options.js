@@ -2,7 +2,7 @@ import { t, store } from "shablon";
 import { $ } from "../utils/i18n";
 
 // TODO: Aria labels for accesibility
-export default function optionsComponent({ options }) {
+export default function optionsComponent({ options, className = "" }) {
     const data = store({
         open: false,
     });
@@ -15,7 +15,9 @@ export default function optionsComponent({ options }) {
 
     const trigger = t.button(
         {
-            className: "btn borderless options-kebab-trigger",
+            rid: "never",
+            className: `btn transparent options-kebab-trigger ${className}`,
+            // 'html-data-open': data.open,
             onclick: () => {
                 data.open = !data.open;
                 setTimeout(() => {
@@ -29,7 +31,7 @@ export default function optionsComponent({ options }) {
                 { className: `options-kebab-list${data.open ? " open" : ""}` },
                 options.map((option) =>
                     t.button(
-                        { ...option.attrs, className: "btn borderless" },
+                        { ...option.attrs, className: "btn transparent" },
                         option.value,
                     ),
                 ),

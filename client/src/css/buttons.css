@@ -1,14 +1,17 @@
 .btn {
     appearance: none;
     background-color: var(--primary-color);
+    padding: var(--md) var(--sm);
     border: 0;
-    padding: var(--md);
     cursor: pointer;
     font-weight: bold;
-    border: var(--border-1);
     text-align: center;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--sans);
+    min-width: 4rem;
 }
 
-.btn.borderless {
-    border: none;
+.transparent {
+    background-color: transparent;
 }

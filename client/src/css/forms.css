@@ -1,22 +1,23 @@
 .field {
     display: flex;
     flex-direction: column;
-    border: var(--border-1);
+    color: var(--text-color);
 
     label {
         cursor: pointer;
         font-weight: bold;
         padding: var(--md);
         font-size: var(--md);
-        background-color: var(--surface-color);
+        background-color: var(--background-color);
         display: flex;
         flex-direction: column;
         gap: var(--md);
-        span {
-            border-bottom: var(--border-1);
+        -webkit-tap-highlight-color: transparent;
+        font-family: var(--sans);
+        > span {
+            border-bottom: var(--border-2);
             padding-bottom: var(--md);
         }
-        -webkit-tap-highlight-color: transparent;
     }
 
     label.checkbox {
@@ -24,6 +25,7 @@
         grid-template-columns: 1fr 1fr;
         align-items: center;
         border: none;
+        font-family: var(--sans);
         span {
             border-bottom: 0;
             padding-bottom: 0;
@@ -35,11 +37,20 @@
     select {
         appearance: none;
         border: none;
-        background-color: var(--surface-color);
+        background-color: var(--background-color);
         outline: none;
+        font-family: var(--font);
+        color: var(--text-color);
         font-size: var(--lg);
         flex: 1;
         margin: 0;
+        resize: none;
+    }
+
+    input::placeholder,
+    textarea::placeholder,
+    select::placeholder {
+        color: var(--text-color);
     }
 
     input[type="checkbox"] {
@@ -51,6 +62,10 @@
     }
 }
 
+.field.borderless {
+    border: 0;
+}
+
 .field.field-row {
     flex-direction: row;
     label {
@@ -60,5 +75,16 @@
         }
         align-items: center;
         flex-direction: row;
+    }
+}
+
+.field {
+    label[for="sort"] {
+        padding: 0;
+        background-color: transparent;
+        border: 0;
+        select {
+            background-color: transparent;
+        }
     }
 }

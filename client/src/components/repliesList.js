@@ -2,7 +2,7 @@ import { t, store, watch } from "shablon";
 import sort from "./sort";
 import replyActions from "./replyActions";
 import replyForm from "./replyForm";
-import { navigate } from "../utils/navigation";
+import { navigate, navigateQueryParam } from "../utils/navigation";
 import { $ } from "../utils/i18n";
 import modals from "./modal";
 import confirmationModal from "./confirmationModal";
@@ -16,43 +16,50 @@ import toast from "./toast";
 import replyBlock from "./replyBlock";
 import reportModal from "./reportModal";
 import reportContent from "../services/collections/reports";
+import pagination from "./pagination";
+
+export const modes = {
+    edit: "edit",
+    delete: "delete",
+    report: "report",
+};
 
 // TODO: Add pagination to replies
-export default function replyList({ discussionId }) {
-    let deleteModal = null;
+export default function replyList({ metaTitle, route, discussionId }, actions) {
+    let deleteModalRef = null;
+    let reportModalRef = null;
     const searchParams = new URLSearchParams(location.search);
     const data = store({
         reply: null,
         replies: [],
         loading: false,
         focus: searchParams.get("focus"),
-        currentReplyContent: "",
         mode: null,
         discussionId: discussionId,
-        sort: searchParams.get("sort"),
+        sort: searchParams.get("sort") || "created",
+        page: +searchParams.get("page") || 1,
+        limit: 3,
     });
+
     async function onSortChange(e) {
-        data.sort = e.target.value;
-        data.replies = await getReplies({ data });
+        navigateQueryParam([
+            {
+                name: "sort",
+                value: e.target.value,
+            },
+            {
+                name: "page",
+                value: data.page,
+            },
+        ]);
     }
-    function onReplyCreateOrUpdate(mode, reply) {
-        return () => {
-            if (data.reply && mode === data.mode && reply.id === data.reply.id) {
-                data.reply = null;
-                data.currentReplyContent = null;
-                data.mode = null;
-                return;
-            }
-            data.reply = reply;
-            data.currentReplyContent = mode === "update" ? reply.content : null;
-            data.mode = mode;
-        };
-    }
+
     function onCancelReply() {
         data.reply = null;
         data.currentReplyContent = null;
         data.mode = null;
     }
+
     async function onSubmitReply(e) {
         if (!pb.authStore?.isValid) {
             toast.info("Login to be part of the conversation");
@@ -62,38 +69,33 @@ export default function replyList({ discussionId }) {
         const { replies, id } = await createOrUpdateReply({
             data,
             event: e,
+            mode: data.mode,
         });
-        data.replies = replies;
         data.focus = id;
         data.reply = null;
-        data.currentReplyContent = null;
+        data.mode = null;
+        data.replies = replies;
     }
     watch(
         () => {
-            return [data.focus, data.mode];
+            return [data.focus, data.mode, data.reply];
         },
         () => {
             // focus
             setTimeout(() => {
-                if (data.focus) {
-                    const el = document.getElementById(`reply-${data.focus}`);
-                    el.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                    });
+                if (data.mode === modes.reply) {
+                    const el = document.getElementById("reply-form");
+                    el.querySelector("textarea").focus();
                 }
-                data.focus = null;
             });
 
             // check reports
-            if (data.mode === "report") {
+            if (data.mode === modes.report) {
                 modals.open(reportModalRef);
                 reportModalRef.onafterclose = clearReportModal;
             }
         },
     );
-
-    let reportModalRef;
 
     function clearReportModal() {
         data.reply = null;
@@ -113,28 +115,77 @@ export default function replyList({ discussionId }) {
         clearReportModal();
     }
 
+    function setMode(mode, reply) {
+        data.mode = mode;
+        data.reply = reply;
+        if (mode === modes.report) {
+            modals.open(reportModalRef);
+        }
+        if (mode === modes.delete) {
+            modals.open(deleteModalRef);
+        }
+    }
+
+    async function onMount({ showLastPage } = {}) {
+        const res = await getReplies({ data });
+        if (showLastPage) {
+            navigateQueryParam([
+                {
+                    name: "page",
+                    value: res.totalPages,
+                },
+                {
+                    name: "sort",
+                    value: data.sort,
+                },
+            ]);
+            return;
+        }
+        if (res.totalPages < data.page && res.totalPages) {
+            navigateQueryParam([
+                {
+                    name: "page",
+                    value: 1,
+                },
+            ]);
+            return;
+        }
+        data.replies = res.replies;
+        data.totalPages = res.totalPages;
+        data.totalItems = res.totalItems;
+    }
     return t.div(
         {
-            onmount: async () => {
-                data.replies = await getReplies({ data });
-            },
+            onmount: onMount,
             rid: discussionId,
         },
-        sort({
-            data,
-            onSortChange,
-        }),
+        t.div({ className: "replies-list-actions" }, [
+            t.span({}, $("Replies")),
+            t.div(
+                {
+                    className: "flex gap-sm",
+                },
+                [
+                    sort({
+                        data,
+                        onSortChange,
+                    }),
+                    actions,
+                ],
+            ),
+        ]),
         () => {
-            deleteModal = confirmationModal({
+            deleteModalRef = confirmationModal({
                 onConfirm: async () => {
                     data.reply = await deleteReply({ data });
-                    modals.close(deleteModal);
+                    modals.close(deleteModalRef);
+                    onMount();
                 },
             });
-            return deleteModal;
+            return deleteModalRef;
         },
         () => {
-            if (data.reply && data.mode === "report") {
+            if (data.reply && data.mode === modes.report) {
                 reportModalRef = reportModal({
                     id: "reply-report-modal",
                     onSubmitReport,
@@ -151,113 +202,46 @@ export default function replyList({ discussionId }) {
             if (data.loading) {
                 return t.span({}, $("Loading..."));
             }
+            if (data.replies.length === 0) {
+                return t.div({ className: "empty-replies" }, $("Be the first one to join this conversation"));
+            }
             return t.div(
                 {
                     className: "flex flex-col gap-md mt-md",
+                    rid: `list-${data.replies.length}`,
                 },
                 data?.replies?.map((reply) =>
                     t.div(
                         {
                             className: "reply-block",
-                            rid: JSON.stringify(reply),
+                            rid: `never`,
                         },
-                        [
-                            replyBlock({ reply, className: "reply" }),
-                            reply?.expand?.replies_via_replyingTo?.map((subreply) =>
-                                replyBlock(
-                                    {
-                                        reply: subreply,
-                                        className: "reply subreply",
-                                    },
-                                    [
-                                        replyActions({
-                                            isOwner:
-                                                pb?.authStore?.record?.id ===
-                                                subreply?.user,
-                                            onEdit: onReplyCreateOrUpdate(
-                                                "update",
-                                                subreply,
-                                            ),
-                                            onReport: () => {
-                                                data.reply = subreply;
-                                                data.mode = "report";
-                                            },
-                                            onDelete: () => {
-                                                data.reply = subreply;
-                                                data.mode = "delete";
-                                                modals.open(deleteModal);
-                                            },
-                                            deleted: subreply.deleted,
-                                        }),
-                                        replyForm({
-                                            id: "subreply-form",
-                                            show:
-                                                data.reply?.id === subreply?.id &&
-                                                ["update", "create"].includes(data.mode),
-                                            onSubmitReply,
-                                            reply,
-                                            value: data.currentReplyContent,
-                                            fieldLabel:
-                                                data.mode === "update"
-                                                    ? $("Update reply")
-                                                    : $("Reply"),
-                                            submitLabel:
-                                                data.mode === "update"
-                                                    ? $("Update")
-                                                    : $("Submit"),
-                                            onCancel: onCancelReply,
-                                        }),
-                                    ],
-                                ),
-                            ),
-                            replyActions({
-                                isOwner: pb.authStore?.record?.id === reply.user,
-                                onReply: onReplyCreateOrUpdate("create", reply),
-                                onEdit: onReplyCreateOrUpdate("update", reply),
-                                onDelete: () => {
-                                    data.reply = reply;
-                                    data.mode = "delete";
-                                    modals.open(deleteModal);
-                                },
-                                onReport: () => {
-                                    data.reply = reply;
-                                    data.mode = "report";
-                                },
-                                deleted: reply.deleted,
-                            }),
-                            () => {
-                                return replyForm({
-                                    id: "reply-form",
-                                    show:
-                                        data.reply?.id == reply.id &&
-                                        ["update", "create"].includes(data.mode),
-                                    onSubmitReply,
-                                    reply,
-                                    value: data.currentReplyContent,
-                                    fieldLabel:
-                                        data.mode === "update"
-                                            ? $("Update reply")
-                                            : $("Reply"),
-                                    submitLabel:
-                                        data.mode === "update"
-                                            ? $("Update")
-                                            : $("Submit"),
-                                });
-                            },
-                        ],
+                        replyBlock({
+                            reply,
+                            data,
+                            className: "reply",
+                            onSubmitEdit: onSubmitReply,
+                            onReply: () => setMode(modes.reply, reply),
+                            onEdit: () => setMode(modes.edit, reply),
+                            onDelete: () => setMode(modes.delete, reply),
+                            onReport: () => setMode(modes.report, reply),
+                        }),
                     ),
                 ),
             );
         },
-        () => {
-            if (!data.loading) {
-                return replyForm({
-                    id: "reply-form",
-                    show: true,
-                    onSubmitReply,
-                    reply: null,
-                });
-            }
-        },
+        () =>
+            replyForm({
+                id: "reply-form",
+                onSubmitReply,
+                onCancel: onCancelReply,
+                reply: Object.keys(modes).includes(data.mode) ? null : data.reply,
+            }),
+        () =>
+            pagination({
+                metaTitle,
+                data,
+                collection: `d/${route.params.slug}`,
+            }),
     );
 }

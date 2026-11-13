@@ -39,7 +39,8 @@ export default function discussionActions({
     }
     const opts = options({
         options: actions,
+        className: "options"
     });
 
-    return t.div({ className: "flex gap-md justify-end mt-md" }, opts);
+    return t.div({ className: "flex gap-md justify-end" }, opts);
 }

@@ -7,6 +7,7 @@
     height: 100%;
     color: var(--text-color);
     backface-visibility: hidden;
+    font-family: var(--sans);
     transition-property: opacity, transform, width, display;
     transition-duration: 0.5s;
     transition-behavior: allow-discrete;
@@ -33,6 +34,7 @@
     }
     .modal-header {
         font-weight: bold;
+        padding: 0;
     }
     .modal-header,
     .modal-footer {
@@ -43,6 +45,9 @@
         padding-top: calc(var(--md) - 10px);
         padding-bottom: calc(var(--md) - 10px);
         display: flex;
+    }
+    .btn {
+        min-width: 5rem;
     }
 }
 

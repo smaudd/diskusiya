@@ -1,25 +1,35 @@
 .options-kebab-trigger {
     appearance: none;
     position: relative;
+    width: 4rem;
+}
+
+.options-kebab-trigger[data-open="true"] {
+    background-color: var(--secondary-color);
 }
 
 .options-kebab-list {
     display: flex;
     flex-direction: column;
-    gap: var(--md);
+    gap: var(--sm);
     padding: var(--sm);
     display: none;
     position: absolute;
     right: 0;
     top: calc(100% + var(--sm));
-    background-color: var(--surface-color);
+    background-color: var(--secondary-color);
     border: var(--border-1);
+    .btn {
+        padding: var(--md) var(--sm);
+        width: 4rem;
+    }
     * {
         display: flex;
         justify-content: flex-start;
         flex: 1;
         width: 100%;
-        padding: var(--sm) var(--md);
+        padding: var(--md);
+        
     }
     z-index: 99;
 }

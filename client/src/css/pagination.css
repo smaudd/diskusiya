@@ -1,0 +1,20 @@
+.pagination-container {
+    display: flex;
+    align-items: center;
+    gap: var(--md);
+    background-color: var(--surface-color);
+    justify-content: space-evenly;
+    margin-top: var(--md);
+    padding: var(--md);
+    font-family: var(--sans);
+
+    a {
+        font-family: var(--sans);
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: bold;
+    }
+    span {
+        font-family: var(--sans);
+    }
+}

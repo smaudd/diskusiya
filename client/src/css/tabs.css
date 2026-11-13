@@ -22,6 +22,10 @@
         .tab[data-active="true"] {
             background-color: var(--primary-color);
         }
+        .btn {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
     }
     .tab-content {
         display: flex;

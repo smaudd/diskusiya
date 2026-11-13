@@ -25,7 +25,7 @@ export default function recordMeta({ author, created, updated }) {
             created != updated
                 ? t.span({ className: "text-xs bold" }, `(${$("edited")})`)
                 : null,
-            t.span({ className: "italic text-xs" }, () => formatDate(d)),
+            t.span({ className: "text-xs" }, () => formatDate(d)),
         ]),
     ]);
 }

@@ -55,7 +55,7 @@ export default function discussion(route) {
                     meta({ title: data.discussion?.title });
                 },
                 rid: data.discussion?.slug,
-                className: "flex flex-col gap-xl mt-xl",
+                className: "flex flex-col gap-md",
             },
             [
                 () => {
@@ -93,9 +93,28 @@ export default function discussion(route) {
                     if (data.notfound) {
                         return notfound();
                     }
-                    return [
-                        t.div({ className: "discussions-header" }, [
-                            t.h1({}, () => data?.discussion?.title),
+                    return [       
+                        t.div({ className: "content-container" }, [
+                            recordMeta({
+                                author: data.discussion?.expand?.user,
+                                updated: data.discussion?.updated,
+                                created: data.discussion?.created,
+                            }),
+                            t.div({ className: "discussions-header" }, [
+                                t.h1({}, () => data?.discussion?.title),
+                            ]),
+                            markdown(data?.discussion?.content),
+                        ]),
+                    ];
+                },
+                () => {
+                    if (data.discussion?.id) {
+                        return replyList(
+                            {
+                                discussionId: data.discussion.id,
+                                route,
+                                metaTitle: data?.discussion?.title,
+                            },
                             discussionActions({
                                 isOwner: data.isOwner,
                                 deleted: false,
@@ -103,18 +122,7 @@ export default function discussion(route) {
                                 onDelete: () => modals.open(deleteModalRef),
                                 onReport: () => modals.open(reportModalRef),
                             }),
-                        ]),
-                        markdown(data?.discussion?.content),
-                        recordMeta({
-                            author: data.discussion?.expand?.user,
-                            updated: data.discussion?.updated,
-                            created: data.discussion?.created,
-                        }),
-                    ];
-                },
-                () => {
-                    if (data.discussion?.id) {
-                        return replyList({ discussionId: data.discussion.id });
+                        );
                     }
                 },
             ],

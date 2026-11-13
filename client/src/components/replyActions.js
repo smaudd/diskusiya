@@ -18,7 +18,7 @@ export default function replyActions({
     if (pb.authStore.isValid && onReply && !deleted) {
         replyAction = t.button(
             {
-                className: "btn borderless",
+                className: "btn transparent",
                 onclick: onReply,
             },
             $("Reply"),
@@ -56,5 +56,5 @@ export default function replyActions({
         options: actions,
     });
 
-    return t.div({ className: "flex gap-md justify-end mt-md" }, [replyAction, opts]);
+    return t.div({ className: "reply-actions" }, [opts, replyAction]);
 }

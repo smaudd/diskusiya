@@ -5,7 +5,8 @@
     --lg: 1rem;
     --xl: 1.25rem;
 
-    --font: Verdana;
+    --font: "PT Serif";
+    --sans: "IBM Plex Sans";
 
     --text-xs: 0.75rem;
     --text-sm: 0.88rem;
@@ -18,12 +19,14 @@
 
     /* TODO: Improve tokens and decide in some actual variables */
 
-    --surface-color: #e6e9ef;
-    --primary-color: color-mix(in srgb, var(--surface-color), white 14%);
-    --secondary-color: color-mix(in srgb, var(--surface-color), black 14%);
+    --background-color: #5d3a3a;
+    --surface-color: color-mix(in srgb, var(--background-color), white 10%);
+    --primary-color: color-mix(in srgb, var(--surface-color), white 50%);
+    --secondary-color: color-mix(in srgb, var(--surface-color), black 20%);
+    --text-color: #e5e5e5;
 
     --sucess-color: green;
-    --info-color: blue;
+    --info-color: var(--secondary-color);
     --error-color: red;
 
     --max-container-width: 768px;
@@ -31,4 +34,5 @@
     --overlay-color: rgba(0, 0, 0, 0.5);
 
     --border-1: 1px solid var(--secondary-color);
+    --border-2: 2px solid var(--surface-color);
 }

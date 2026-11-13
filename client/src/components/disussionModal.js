@@ -49,6 +49,7 @@ export default function discussionModal({
                                 required: true,
                                 placeholder: $("Content"),
                                 value: values?.content,
+                                rows: 20
                             },
                             t.textarea,
                         ),
@@ -59,7 +60,7 @@ export default function discussionModal({
         t.footer({ className: "modal-footer" }, [
             t.button(
                 // TODO: Not sure how this usage works here but it does
-                { className: "btn borderless", onclick: () => modals.close(this) },
+                { className: "btn transparent", onclick: () => modals.close(this) },
                 $("Cancel"),
             ),
             t.button({ className: "btn", "html-form": id }, () =>

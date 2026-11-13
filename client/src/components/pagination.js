@@ -2,20 +2,24 @@ import { t, watch } from "shablon";
 import { $ } from "../utils/i18n";
 import meta from "../services/meta";
 
-export default function pagination({ data, collection = "" }) {
+export default function pagination({ data, collection = "", metaTitle }) {
     const params = new URLSearchParams(window.location.search);
     params.delete("page");
-
     watch(
         () => [data.page],
         () => {
-            meta({ title: $("Page (%%)", data.page) });
+            meta({
+                title: metaTitle || $("Page (%%)", data.page),
+            });
         },
     );
 
     // important for UX if this isn't set user will lose every query param except the current page
     const paramsString = params.size >= 1 ? `&${params}` : "";
-    return t.div({ className: "flex gap-md justify-center mt-md" }, [
+    if (!data.totalPages) {
+        return null
+    }
+    return t.div({ className: "pagination-container" }, [
         // first page
         t.a(
             {
@@ -38,7 +42,7 @@ export default function pagination({ data, collection = "" }) {
             t.a(
                 {
                     href: `/${collection}?page=${+data.page + 1}${paramsString}`,
-                    ariaDisabled: data.page >= data.totalPages,
+                    ariaDisabled: data.page >= data.totalPages || !data.totalPages,
                 },
                 $(">"),
             ),
@@ -46,7 +50,7 @@ export default function pagination({ data, collection = "" }) {
             t.a(
                 {
                     href: `/${collection}?page=${data.totalPages}${paramsString}`,
-                    ariaDisabled: data.page === data.totalPages,
+                    ariaDisabled: data.page === data.totalPages || !data.totalPages,
                 },
                 $(">>"),
             ),

@@ -56,7 +56,7 @@ export default function reportModal({ id, onSubmitReport, record }) {
             t.button(
                 // TODO: Not sure how this usage works here but it does
                 {
-                    className: "btn borderless",
+                    className: "btn transparent",
                     onclick: () => {
                         modals.close(this);
                     },

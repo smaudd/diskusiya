@@ -11,18 +11,19 @@
 @import "./components.css";
 @import "./tabs.css";
 @import "./tables.css";
+@import "./pagination.css";
 
 *,
 *::before,
 *::after {
     box-sizing: border-box;
-    font-family: var(--font);
 }
 
 body {
     min-height: 100dvh;
     margin: 0;
-    padding: var(--md);
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 h1,
@@ -33,6 +34,8 @@ h5,
 h6 {
     margin: 0;
     padding: 0;
+    color: var(--text-color);
+    font-family: var(--sans);
 }
 
 ul {
@@ -77,6 +80,21 @@ p {
     margin: 0;
 }
 
+header {
+    padding: var(--md);
+    background-color: var(--surface-color);
+    .btn {
+        padding: var(--lg) var(--md);
+    }
+}
+
 .loader {
     padding: var(--md);
+}
+
+a {
+    font-weight: bold;
+    color: var(--text-color);
+    font-family: var(--sans);
+    text-decoration: none;
 }

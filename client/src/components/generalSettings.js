@@ -171,7 +171,7 @@ export default function generalSettings() {
                     ? t.button(
                           {
                               type: "button",
-                              className: "btn borderless",
+                              className: "btn transparent",
                               onclick: onCancelAvatar,
                           },
                           $("Cancel"),

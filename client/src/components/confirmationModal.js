@@ -17,7 +17,7 @@ export default function confirmationModal({ onConfirm }) {
                 t.button(
                     // TODO: Not sure how this usage works here but it does
                     {
-                        className: "btn borderless",
+                        className: "btn transparent",
                         onclick: () => modals.close(this),
                     },
                     $("Cancel"),

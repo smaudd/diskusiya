@@ -10,7 +10,7 @@ export default function field(props, fieldElement, children) {
         { className: `field${className ? ` ${className}` : ""}` },
         t.label(
             { "html-for": props.id, className: props.type },
-            t.span({}, $(props.label)),
+            props.label ? t.span({}, $(props.label)) : null,
             [
                 fieldElement(
                     props,

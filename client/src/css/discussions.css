@@ -5,30 +5,84 @@
 
 .subreply,
 .reply-block {
-    padding: var(--md);
+    /* padding: var(--md); */
     display: flex;
     flex-direction: column;
     border: 2px solid var(--surface-color);
 }
 
-.reply-form {
+.content-container {
+    background-color: var(--surface-color);
     padding: var(--md);
-    margin-top: var(--md);
     display: flex;
     flex-direction: column;
     gap: var(--md);
-    border: 2px solid var(--surface-color);
+    .record-meta {
+        margin: 0;
+    }
+ 
+}
+
+.reply-form {
+    margin-top: var(--md);
+    display: flex;
+    flex-direction: column;
+    border: 0;
+    overflow: hidden;
+    background-color: var(--surface-color);
+    padding: var(--md);
+    .field {
+        overflow: hidden;
+        border: 0;
+        border-bottom-right-radius: 0;
+    }
+    .btn {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        padding: var(--md) var(--sm);
+        width: 5rem;
+        background-color: var(--background-color);
+    }
+
+    .quote {
+        margin-bottom: 0;
+        font-weight: normal;
+        padding: var(--md);
+    }
+
+    label {
+        padding: 0;
+        gap: 0;
+        > span {
+            padding: var(--md);
+            margin-bottom: 0;
+            border: 0;
+        }
+        textarea {
+            padding: var(--md);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            border-bottom-right-radius: 0;
+        }
+    }
 }
 
 .record-meta {
     display: flex;
     gap: var(--md);
     justify-content: space-between;
-    margin: var(--md) 0;
+    margin-bottom: var(--md);
+    font-family: var(--sans);
     img {
         width: 2rem;
         height: 2rem;
         object-fit: contain;
+    }
+}
+
+#discussion-form {
+    textarea {
+        height: 10rem;
     }
 }
 
@@ -37,9 +91,11 @@
     text-decoration: none;
     display: flex;
     flex-direction: column;
-    border-bottom: var(--border-1);
-    padding: var(--xl) 0;
+    padding: var(--md);
     gap: var(--md);
+    margin-bottom: var(--lg);
+    background-color: var(--surface-color);
+
     h3 {
         font-weight: bold;
         font-size: var(--xl);
@@ -50,7 +106,6 @@
     text-transform: uppercase;
     width: 2rem;
     height: 2rem;
-    border-radius: 100%;
     border: var(--border-1);
     display: flex;
     justify-content: center;
@@ -63,7 +118,8 @@
 .discussions-header {
     display: flex;
     gap: var(--md);
-    flex-direction: row;
+    flex-direction: column;
+    background-color: var(--surface-color);
     h1 {
         display: flex;
         gap: var(--md);
@@ -74,9 +130,19 @@
     }
 }
 
+.clear-filters, .empty-replies {
+    padding: var(--md);
+    display: flex;
+    gap: var(--md);
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--surface-color);
+}
+
 .discussions-filters {
     display: flex;
     gap: var(--md);
+    background-color: var(--surface-color);
     justify-content: space-between;
 }
 
@@ -85,20 +151,65 @@
 }
 
 .reply {
+    padding: var(--md);
+    background-color: var(--surface-color);
     .record-meta {
         margin: 0;
     }
+    .content {
+        padding: var(--md) 0;
+        margin-top: var(--md);
+        font-family: var(--font);
+        border-bottom-right-radius: 0;
+    }
+    .field {
+        margin-top: var(--md);
+        
+    }
+    .quote {
+        padding: var(--md);
+        padding-right: 0;
+        margin: var(--md) 0;
+        border-radius: 0;
+        .content {
+            border-bottom-right-radius: var(--sm);
+        }
+    }
+    .reply-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--sm);
+        justify-content: flex-end;
+        background-color: var(--surface-color);
+    }
+    .btn {
+        width: 4rem;
+    }
 }
 
-.content {
-    margin: var(--xl) 0;
+.discussions-search,
+.discussions-search-md {
+    input {
+        padding: var(--md);
+    }
+}
+
+.replies-list-actions {
+    display: flex;
+    align-items: center;
+    background-color: var(--surface-color);
+    justify-content: space-between;
+    padding: var(--md);
+    span {
+        font-weight: bold;
+        font-family: var(--sans);
+    }
 }
 
 /* Tablet and up */
 @media screen and (min-width: 768px) {
     .discussions-header {
         width: 100%;
-        flex-direction: row;
         justify-content: space-between;
     }
     .discussions-search-md {

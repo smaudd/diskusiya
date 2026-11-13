@@ -1,6 +1,18 @@
 .quote {
     padding: var(--md);
-    border-left: var(--border-1);
-    font-weight: bold;
+    border-left: 4px solid var(--secondary-color);
+    font-size: var(--text-sm);
+    background-color: var(--surface-color);
     font-style: italic;
+    .content {
+        margin: 0;
+        color: var(--text-color);
+        font-family: var(--font);
+    }
+    .record-meta {
+        margin-bottom: var(--md);
+        span {
+            font-family: var(--sans);
+        }
+    }
 }
