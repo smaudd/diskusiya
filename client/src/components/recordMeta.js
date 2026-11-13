@@ -4,7 +4,7 @@ import avatar from "./avatar";
 
 
 function formatDate(date) {
-    return `${date.toLocaleDateString().slice(0, 5)}@${date.toLocaleTimeString().slice(0, 5)}`;
+    return `${date.toLocaleDateString().slice(0, 5)} @ ${date.toLocaleTimeString().slice(0, 5)}`;
 }
 
 export default function recordMeta({ author, created, updated }) {
@@ -23,9 +23,9 @@ export default function recordMeta({ author, created, updated }) {
         ]),
         t.div({ className: "flex gap-md items-center" }, [
             created != updated
-                ? t.span({ className: "text-xs bold" }, `(${$("edited")})`)
+                ? t.span({ className: "text-xs italic" }, `(${$("edited")})`)
                 : null,
-            t.span({ className: "text-xs" }, () => formatDate(d)),
+            t.span({ className: "text-sm" }, () => formatDate(d)),
         ]),
     ]);
 }
