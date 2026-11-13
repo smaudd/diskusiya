@@ -24,6 +24,7 @@
     --primary-color: color-mix(in srgb, var(--surface-color), white 50%);
     --secondary-color: color-mix(in srgb, var(--surface-color), black 20%);
     --text-color: #e5e5e5;
+    --muted-color: color-mix(in srgb, var(--background-color), white 50%);
 
     --sucess-color: green;
     --info-color: var(--secondary-color);

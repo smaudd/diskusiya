@@ -50,7 +50,7 @@
     input::placeholder,
     textarea::placeholder,
     select::placeholder {
-        color: var(--text-color);
+        color: var(--muted-color);
     }
 
     input[type="checkbox"] {
