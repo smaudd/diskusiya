@@ -163,7 +163,7 @@ export default function replyList({ metaTitle, route, discussionId }, actions) {
             t.span({}, $("Replies")),
             t.div(
                 {
-                    className: "flex gap-sm",
+                    className: "flex gap-xl",
                 },
                 [
                     sort({

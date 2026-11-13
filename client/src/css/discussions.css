@@ -209,6 +209,9 @@
         font-weight: bold;
         font-family: var(--sans);
     }
+    .options-kebab-trigger {
+        font-size: var(--text-base);
+    }
 }
 
 /* Tablet and up */

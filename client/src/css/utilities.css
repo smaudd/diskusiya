@@ -38,6 +38,10 @@
     gap: var(--md);
 }
 
+.gap-lg {
+    gap: var(--lg);
+}
+
 .gap-xl {
     gap: var(--xl);
 }
